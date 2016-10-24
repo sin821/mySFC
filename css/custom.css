@@ -1,0 +1,52 @@
+body {
+  padding-top: 50px;
+}
+.starter-template {
+  padding: 40px 15px;
+  text-align: center;
+}
+
+h1 {
+	margin-bottom:20px;
+}
+
+.load-form-group {
+	margin-bottom:30px;
+}
+
+.timeline-horizontal {
+	margin-top: 100px;
+	margin-bottom: 0px;
+}
+
+.popover {
+	font-size: 10px;
+}
+
+.popover-content {
+	padding: 9px 9px;
+}
+
+#input-tms {
+	resize: none;
+    height: 250px;
+}
+#commentBox {
+	resize: none;
+    height: 250px;
+}
+
+.glyphicon.normal-right-spinner {
+    -webkit-animation: glyphicon-spin-r 2s infinite linear;
+    animation: glyphicon-spin-r 2s infinite linear;
+}
+
+.text-red {
+	color: #DD0000;
+}
+
+.alert-failed {
+  color: #a94442;
+  background-color: #f2dede;
+  border-color: #ebccd1;
+}
