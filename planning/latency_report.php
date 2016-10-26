@@ -23,6 +23,7 @@ include('../php/db_conn.php');
         <h1>Latency Report</h1>
 
         <div class="row">
+
           <div class="col-lg-offset-1 col-lg-10 col-md-12">
             <table id="table" class="table table-hover table=condensed text-left">
               <thead>
@@ -124,6 +125,10 @@ include('../php/db_conn.php');
               </tbody>
             </table>
           </div>
+
+          <div class="col-lg-2 col-md-12">
+          </div>
+
         </div>
       </div>
 

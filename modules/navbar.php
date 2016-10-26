@@ -30,10 +30,9 @@
             </a>
             <ul class="dropdown-menu">
               <li><a href="/planning/update_TMS2_flightlist.php">Update TMS2 Latency</a></li>
-              <!--<li><a href="/planning/update_TMS3_flightlist.php">Update TMS3 Latency</a></li>-->
-              <li><a href="/planning/latency_report.php">Latency Report</a></li>
               <li><a href="/planning/generate_TMS2_plan.php">Input Current TMS2 Plan</a></li>
-              <!--<li><a href="/planning/generate_TMS3_plan.php">Input Current TMS3 Plan</a></li>-->
+              <li><a href="/planning/latency_report.php">Latency Report</a></li>
+              <li><a href="/planning/cadet_list.php">Manage Cadet List</a></li>
             </ul>
           </li>
           <?php
