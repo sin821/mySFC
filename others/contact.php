@@ -29,7 +29,7 @@ include('../php/db_conn.php');
               <hr />
 
                 <div class="form-group">
-                  <textarea class="form-control" id="commentBox" name="message" placeholder="Drop an anonymous suggestion here!"></textarea>
+                  <textarea class="form-control" id="commentBox" name="message" placeholder="Drop an anonymous suggestion here!" required></textarea>
                 </div>
 
               <hr />
