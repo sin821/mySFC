@@ -11,7 +11,7 @@ include('../php/db_conn.php');
         	<form id="registrationForm" method="POST" action="../php/registerNewAccount.php">
         		<div class="form-group">
         			<label>Name: </label>
-        			<select class="form-control" name="cadet">
+        			<select class="form-control" name="cadet" required>
         				<?php
         				echo $query = "SELECT DISTINCT(cadet_id), cadet_name FROM tbl_cadets LEFT JOIN tbl_login ON login_cadet=cadet_id WHERE login_cadet IS NULL ORDER BY cadet_name ASC";
         				$result = mysqli_query($link, $query);
