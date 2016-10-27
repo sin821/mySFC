@@ -7,10 +7,27 @@ if(!isset($_SESSION['cadet'])) header('location: /index.php?status=failed&msg=Yo
 include('db_conn.php');
 
 $errorFlag = FALSE;
+$valid_date = FALSE;
 
 $input = $_POST['flightList'];
 
-if (preg_match("#^\d{2}/\d{2}/\d{4}#sm", $input, $date)) {
+//check if the user is using IE. Must include the date if user is using IE.
+preg_match('/MSIE (.*?);/', $_SERVER['HTTP_USER_AGENT'], $matches);
+if(count($matches)<2){
+  preg_match('/Trident\/\d{1,2}.\d{1,2}; rv:([0-9]*)/', $_SERVER['HTTP_USER_AGENT'], $matches);
+}
+
+if (count($matches)>1){
+    //Then we're using IE
+    echo $date[0] = date('d/m/Y', strtotime('now + 6 hours'));
+    $valid_date = TRUE;
+}
+else {
+    preg_match("#^\d{2}/\d{2}/\d{4}#sm", $input, $date);
+    $valid_date = TRUE;
+}
+
+if ($valid_date) {
 
     $date = date_create_from_format('d/m/Y', $date[0]);
     $date = date_format($date, 'Y-m-d');
