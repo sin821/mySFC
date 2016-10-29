@@ -48,7 +48,7 @@ include('../php/db_conn.php');
 
             <div class="panel panel-danger">
               <!-- Default panel contents -->
-              <div class="panel-heading">Repeated Sorties:</div>
+              <div class="panel-heading">Repeat Sorties<span class="pull-right"><i class="fa fa-plus"></i></span></div>
               <!-- List group -->
               <ul class="list-group">
               <?php
@@ -65,7 +65,7 @@ include('../php/db_conn.php');
 
             <div class="panel panel-info">
               <!-- Default panel contents -->
-              <div class="panel-heading">No-Plan List:</div>
+              <div class="panel-heading">No-Plan List<span class="pull-right"><i class="fa fa-plus"></i></span></div>
               <!-- List group -->
               <ul class="list-group">
               <?php
@@ -80,30 +80,60 @@ include('../php/db_conn.php');
               </ul>
             </div>
 
+            <div class="panel panel-warning">
+              <!-- Default panel contents -->
+              <div class="panel-heading">Other Requests<span class="pull-right"><i class="fa fa-plus"></i></span></div>
+              <!-- List group -->
+              <ul class="list-group">
+              <?php
+              $query = "SELECT cadet_opsname, request_remarks FROM tbl_requests JOIN tbl_cadets ON request_cadet=cadet_id WHERE request_type='message'";
+              $result = mysqli_query($link, $query);
+              while($row = mysqli_fetch_array($result)) {
+                ?>
+                <li class="list-group-item"><small><?php echo $row['request_remarks']; ?></small>
+                <p class="text-right text-muted"><small>- <?php echo $row['cadet_opsname']; ?></small></li>
+                <?php
+              }
+              ?>
+              </ul>
+            </div>
+
           </div>
           <div class="col-md-10">
           <?php
-          $query = "SELECT instructor_initials FROM tbl_instructors";
+          $query = "SELECT instructor_id, instructor_initials FROM tbl_instructors ORDER BY instructor_initials";
           $result = mysqli_query($link, $query);
           while($row = mysqli_fetch_array($result)) {
+            $instructor_id = $row['instructor_id'];
+            $instructor = $row['instructor_initials'];
             ?>
             <div class="col-md-4">
               <div class="panel panel-default">
                 <!-- Default panel contents -->
-                <div class="panel-heading"><?php echo $row['instructor_initials']; ?></div>
+                <div class="panel-heading"><?php echo $row['instructor_initials']; ?><span class="pull-right"><i class="fa fa-plus"></i></span></div>
                 <div class="panel-body text-left">
                   <ul>
-                    <li>Flies 2 students per day.</li>
+                  <?php
+                  $query2 = "SELECT * FROM tbl_instructorinstructions WHERE instructorinstruction_instructor='$instructor_id' AND instructorinstruction_done='0'";
+                  $result2 = mysqli_query($link, $query2);
+                  while($row2 = mysqli_fetch_array($result2)) {
+                    ?>
+                    <li><?php echo $row2['instructorinstruction_content']; ?></li>
+                    <?php
+                  }
+                  ?>
                   </ul>
                 </div>
 
                 <!-- List group -->
                 <ul class="list-group">
                 <?php
-                $instructor = $row['instructor_initials'];
-                $query2 = "SELECT cadet_opsname, total_latency FROM vw_latency JOIN tbl_cadets ON dual_cadet=cadet_name WHERE instructor_initials='$instructor' ORDER BY total_latency DESC, vw_latency.cadet_course ASC";
+                $query2 = "SELECT cadet_name, cadet_opsname, total_latency FROM vw_latency JOIN tbl_cadets ON dual_cadet=cadet_name WHERE instructor_initials='$instructor' ORDER BY total_latency DESC, vw_latency.cadet_course ASC";
                 $result2 = mysqli_query($link, $query2);
                 while($row2 = mysqli_fetch_array($result2)) {
+
+                  $cadet_name = $row2['cadet_name'];
+
                   if($row2['total_latency']>=5) {
                     $class = "list-group-item list-group-item-danger";
                   }
@@ -114,7 +144,7 @@ include('../php/db_conn.php');
                     $class = "list-group-item list-group-item-success";
                   }
                   ?>
-                  <li class="<?php echo $class; ?>"><?php echo $row2['cadet_opsname']; ?><span class="pull-right"><?php echo $row2['total_latency']; ?></span></li></span></li>
+                  <a onclick="getSorties('<?php echo $cadet_name; ?>')"><li class="<?php echo $class; ?>"><?php echo $row2['cadet_opsname']; ?><span class="pull-right"><?php echo $row2['total_latency']; ?></span></li></a>
                   <?php
                 }
                 ?>
@@ -145,13 +175,15 @@ include('../php/db_conn.php');
 
     <!-- Page-dependent custom scripts -->
     <script>
-    $(document).ready( function () {
-        //initialise datatable
-        $('#table').DataTable({
-            "paging": false,
-            "responsive": true
-        });
-    } );
+    function getSorties(cadet) {
+      $('#ajax').load( encodeURI("../ajax/modal_sortiesCompleted.php?cadet="+cadet) ,function(responseTxt,statusTxt,xhr){
+        if(statusTxt=="success") {
+          $('#myModal').modal();
+        }
+        if(statusTxt=="error")
+          console.log("Error: "+xhr.status+": "+xhr.statusText);
+      });
+    }
     </script>
   </body>
 </html>

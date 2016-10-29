@@ -25,6 +25,44 @@ include('../php/db_conn.php');
         <div class="row">
           <div class="col-lg-offset-2 col-lg-8 col-md-12">
             <div class="panel panel-default">
+                <div class="panel-heading">Repeat Sortie</div>
+
+                <div class="panel-body">
+                  <div class="row">
+                    <div class="col-xs-12">
+                      <form class="form-horizontal" method="POST" action='../php/sendRepeatSortie.php'>
+                        <div class="form-group">
+                          <label for="sortie" class="col-sm-5 control-label">Select Sortie:</label>
+                          <div class="col-sm-7">
+                            <select name='sortie' class="form-control" required>
+                            <?php
+                            $syllabus = $_SESSION['syllabus'];
+                            $query = "SELECT sortie_id, sortie_code FROM tbl_sorties WHERE sortie_syllabus='$syllabus' AND sortie_type='DUAL'";
+                            $result = mysqli_query($link,$query);
+                            while($row = mysqli_fetch_array($result)) {
+                              ?>
+                              <option value='<?php echo $row['sortie_id']; ?>'><?php echo $row['sortie_code']; ?></option>
+                              <?php
+                            }
+                            ?>
+                            </select>
+                          </div>
+                        </div>
+                        <p class="text-muted"><small>Repeated sorties are sorties that have been PostFlighted (NOT CANCELLED) in TMS2 where the 'repeat sortie' checkbox has been checked. Indicating repeated sorties to planners will allow planners to re-plan you for the same sortie.</small></p>
+                        <div class="text-right">
+                          <button type="submit" class="btn btn-success">Report</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-offset-2 col-lg-8 col-md-12">
+            <div class="panel panel-default">
                 <div class="panel-heading">Request No-Plan Dates</div>
 
                 <div class="panel-body">

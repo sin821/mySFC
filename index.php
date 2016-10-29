@@ -39,7 +39,7 @@ include('php/db_conn.php');
                       <div class="form-group">
                         <p><a onclick="passwordReset()" href="#">Forgot your password?</a></p>
                         <p><a onclick="loadRegistrationModal()" href="#">Need a new account?</a></p>
-                        <p class="text-muted"><small>This site is best used with Google Chrome.</small></p>
+                        <p class="text-muted text-center"><small>This site is best used with Google Chrome.</small></p>
                         <span id="errorSpan" class="text-red"></span>
                       </div>
                     </form>
