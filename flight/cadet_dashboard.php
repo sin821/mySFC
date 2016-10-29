@@ -5,6 +5,22 @@ session_start([
 ]);
 if(!isset($_SESSION['cadet'])) header('location: /index.php?status=failed&msg=You need to log in.');
 include('../php/db_conn.php');
+
+$cadet_syllabus = $_SESSION['syllabus'];
+$cadet_name = $_SESSION['name'];
+
+$query = "SELECT COUNT(sortie_code) AS cadet_TotalSorties FROM tbl_sorties JOIN tbl_syllabus ON sortie_syllabus=syllabus_code WHERE syllabus_code='$cadet_syllabus'";
+$result = mysqli_query($link, $query);
+while($row = mysqli_fetch_array($result)){
+  $db_TotalSorties = $row['cadet_TotalSorties'];
+}
+
+$query = "SELECT COUNT(flightlist_sortie) AS cadet_CompletedSorties FROM tbl_flightlist WHERE flightlist_status = 'PostFlight' AND (flightlist_pilot1 = '$cadet_name' OR flightlist_pilot2 = '$cadet_name') ORDER BY flightlist_id";
+$result = mysqli_query($link, $query);
+while($row = mysqli_fetch_array($result)){
+  $db_CompletedSorties = $row['cadet_CompletedSorties'];
+}
+$db_IncompleteSorties = $db_TotalSorties - $db_CompletedSorties;
 ?>
 
 <!DOCTYPE html>
@@ -22,12 +38,13 @@ include('../php/db_conn.php');
       <div class="starter-template">
 
         <div class="row">
-          <div class="col-md-4">
+          <div class="col-md-3">
             <div class="panel panel-primary">
                 <!-- Default panel contents -->
                 <div class="panel-heading">Progress</div>
                 <!-- Pie Chart -->
                 <div id="Progress_Chart"></div>
+
               </div>
           </div>
           <div class="col-md-4">
@@ -137,20 +154,22 @@ include('../php/db_conn.php');
 
     <!-- Page-dependent custom scripts -->
     <script>
-    $(document).ready( function () {
-        //initialise datatable
-        $('#table').DataTable({
-            "paging": false,
-            "responsive": true
-        });
 
-        Morris.Donut({
+    $(document).ready( function () {
+
+        $('#Progress_Chart').height('282');
+
+        myDonut = Morris.Donut({
           element: 'Progress_Chart',
+          resize: true,
           data: [
-            {label: "Complete Sorties", value: 12},
-            {label: "Incomplete Sorties", value: 30},
+            {label: "Incomplete Sorties", value: <?php echo $db_IncompleteSorties; ?>},
+            {label: "Complete Sorties", value: <?php echo $db_CompletedSorties; ?>},
+          ],
+          colors: [
+            '#FE4D4D', '#05E177'
           ]
-        });
+        }).select(1);
 
     } );
     </script>
