@@ -21,6 +21,9 @@
     <!-- FontAwesome CSS -->
     <link href="../assets/font-awesome-4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
+    <!-- Morris.js CSS -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+
 
     <!-- Custom styles for this template -->
     <link href="../css/timeline.css" rel="stylesheet">
