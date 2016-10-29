@@ -16,6 +16,7 @@
             Flying Tools <span class="caret"></span>
           </a>
           <ul class="dropdown-menu">
+            <li><a href="/flight/cadet_dashboard.php">Dashboard</a></li>
             <li><a href="/flight/calculator.php">Mass, Balance & Performance</a></li>
             <li><a href="/flight/cadet_latency.php">Track Progress</a></li>
             <li><a href="/flight/planning_request.php">Planning Request</a></li>
@@ -29,6 +30,7 @@
               Planning Tools <span class="caret"></span>
             </a>
             <ul class="dropdown-menu">
+              <li><a href="/flight/planner_dashboard.php">Dashboard</a></li>
               <li><a href="/planning/update_TMS2_flightlist.php">Update TMS2 Latency</a></li>
               <li><a href="/planning/generate_TMS2_plan.php">Input Current TMS2 Plan</a></li>
               <li><a href="/planning/latency_report.php">Latency Report</a></li>
