@@ -48,7 +48,7 @@ include('../php/db_conn.php');
 
             <div class="panel panel-danger">
               <!-- Default panel contents -->
-              <div class="panel-heading">Repeat Sorties<span class="pull-right"><i class="fa fa-plus"></i></span></div>
+              <div class="panel-heading">Repeat Sorties</div>
               <!-- List group -->
               <ul class="list-group">
               <?php
@@ -65,7 +65,7 @@ include('../php/db_conn.php');
 
             <div class="panel panel-info">
               <!-- Default panel contents -->
-              <div class="panel-heading">No-Plan List<span class="pull-right"><i class="fa fa-plus"></i></span></div>
+              <div class="panel-heading">No-Plan List</div>
               <!-- List group -->
               <ul class="list-group">
               <?php
@@ -82,7 +82,7 @@ include('../php/db_conn.php');
 
             <div class="panel panel-warning">
               <!-- Default panel contents -->
-              <div class="panel-heading">Other Requests<span class="pull-right"><i class="fa fa-plus"></i></span></div>
+              <div class="panel-heading">Other Requests</div>
               <!-- List group -->
               <ul class="list-group">
               <?php
@@ -101,7 +101,7 @@ include('../php/db_conn.php');
           </div>
           <div class="col-md-10">
           <?php
-          $query = "SELECT instructor_id, instructor_initials FROM tbl_instructors ORDER BY instructor_initials";
+          $query = "SELECT instructor_id, instructor_initials FROM tbl_instructors";
           $result = mysqli_query($link, $query);
           while($row = mysqli_fetch_array($result)) {
             $instructor_id = $row['instructor_id'];
@@ -144,7 +144,9 @@ include('../php/db_conn.php');
                     $class = "list-group-item list-group-item-success";
                   }
                   ?>
-                  <a onclick="getSorties('<?php echo $cadet_name; ?>')"><li class="<?php echo $class; ?>"><?php echo $row2['cadet_opsname']; ?><span class="pull-right"><?php echo $row2['total_latency']; ?></span></li></a>
+                  <a onclick="getSorties('<?php echo $cadet_name; ?>')">
+                  <li class="<?php echo $class; ?>"><?php echo $row2['cadet_opsname']; ?><span class="pull-right"><?php echo $row2['total_latency']; ?></span></li>
+                  </a>
                   <?php
                 }
                 ?>
