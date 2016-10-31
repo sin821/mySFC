@@ -69,7 +69,7 @@ include('../php/db_conn.php');
               <!-- List group -->
               <ul class="list-group">
               <?php
-              $query = "SELECT cadet_opsname, request_noplanstart, request_noplanend, request_remarks FROM tbl_requests JOIN tbl_cadets ON request_cadet=cadet_id WHERE request_type='no-plan' AND (DATE(NOW()) BETWEEN (request_noplanstart-INTERVAL 1 DAY) AND request_noplanend) ORDER BY request_noplanstart DESC";
+              $query = "SELECT cadet_opsname, request_noplanstart, request_noplanend, request_remarks FROM tbl_requests JOIN tbl_cadets ON request_cadet=cadet_id WHERE request_type='no-plan' AND (DATE(NOW()) BETWEEN (request_noplanstart-INTERVAL 2 DAY) AND request_noplanend) ORDER BY request_noplanstart ASC";
               $result = mysqli_query($link, $query);
               while($row = mysqli_fetch_array($result)) {
                 ?>
@@ -110,15 +110,16 @@ include('../php/db_conn.php');
             <div class="col-md-4">
               <div class="panel panel-default">
                 <!-- Default panel contents -->
-                <div class="panel-heading"><?php echo $row['instructor_initials']; ?><span class="pull-right"><i class="fa fa-plus"></i></span></div>
+                <div class="panel-heading"><?php echo $instructor; ?><span class="pull-right" onclick="modifyInstructorInstruction('<?php echo $instructor; ?>','0')"><i class="fa fa-plus"></i></span></div>
                 <div class="panel-body text-left">
                   <ul>
                   <?php
                   $query2 = "SELECT * FROM tbl_instructorinstructions WHERE instructorinstruction_instructor='$instructor_id' AND instructorinstruction_done='0'";
                   $result2 = mysqli_query($link, $query2);
                   while($row2 = mysqli_fetch_array($result2)) {
+                    $instruction_id = $row2['instructorinstruction_id'];
                     ?>
-                    <li><?php echo $row2['instructorinstruction_content']; ?></li>
+                    <li><a onclick="modifyInstructorInstruction('<?php echo $instructor; ?>','<?php echo $instruction_id; ?>')"><?php echo $row2['instructorinstruction_content']; ?></a></li>
                     <?php
                   }
                   ?>
@@ -128,16 +129,24 @@ include('../php/db_conn.php');
                 <!-- List group -->
                 <ul class="list-group">
                 <?php
+                //get cadets by instructor
                 $query2 = "SELECT cadet_name, cadet_opsname, total_latency FROM vw_latency JOIN tbl_cadets ON dual_cadet=cadet_name WHERE instructor_initials='$instructor' ORDER BY total_latency DESC, vw_latency.cadet_course ASC";
                 $result2 = mysqli_query($link, $query2);
                 while($row2 = mysqli_fetch_array($result2)) {
 
                   $cadet_name = $row2['cadet_name'];
 
-                  if($row2['total_latency']>=5) {
+                  //check if cadet is flying today
+                  $query3 = "SELECT COUNT(*) AS planned_today FROM tbl_tms2currentplan WHERE flightlist_pilot1='$cadet_name' OR flightlist_pilot2='$cadet_name'";
+                  $result3 = mysqli_query($link, $query3);
+                  while($row3 = mysqli_fetch_array($result3)) {
+                    $isPlanned = $row3['planned_today'];
+                  }
+
+                  if($row2['total_latency']>=5 && $isPlanned==0) {
                     $class = "list-group-item list-group-item-danger";
                   }
-                  elseif($row2['total_latency']<5 && $row2['total_latency']>=3) {
+                  elseif($row2['total_latency']<5 && $row2['total_latency']>=3 && $isPlanned==0) {
                     $class = "list-group-item list-group-item-warning";
                   }
                   else {
@@ -145,7 +154,18 @@ include('../php/db_conn.php');
                   }
                   ?>
                   <a onclick="getSorties('<?php echo $cadet_name; ?>')">
-                  <li class="<?php echo $class; ?>"><?php echo $row2['cadet_opsname']; ?><span class="pull-right"><?php echo $row2['total_latency']; ?></span></li>
+                    <li class="<?php echo $class; ?>"><?php echo $row2['cadet_opsname']; ?>
+                      <span class="pull-right">
+                      <?php
+                      if($isPlanned==0) {
+                        echo $row2['total_latency'];
+                      }
+                      else {
+                        echo "<i class='fa fa-plane'></i> ".$row2['total_latency'];
+                      }
+                      ?>
+                      </span>
+                    </li>
                   </a>
                   <?php
                 }
@@ -179,6 +199,15 @@ include('../php/db_conn.php');
     <script>
     function getSorties(cadet) {
       $('#ajax').load( encodeURI("../ajax/modal_sortiesCompleted.php?cadet="+cadet) ,function(responseTxt,statusTxt,xhr){
+        if(statusTxt=="success") {
+          $('#myModal').modal();
+        }
+        if(statusTxt=="error")
+          console.log("Error: "+xhr.status+": "+xhr.statusText);
+      });
+    }
+    function modifyInstructorInstruction(instructor, id) {
+      $('#ajax').load( encodeURI("../ajax/modal_modifyInstructorInstruction.php?inst="+instructor+"&id="+id) ,function(responseTxt,statusTxt,xhr){
         if(statusTxt=="success") {
           $('#myModal').modal();
         }

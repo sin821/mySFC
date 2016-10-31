@@ -16,7 +16,7 @@
             Flying Tools <span class="caret"></span>
           </a>
           <ul class="dropdown-menu">
-            <li><a href="/flight/cadet_dashboard.php">Dashboard</a></li>
+            <!--<li><a href="/flight/cadet_dashboard.php">Dashboard</a></li>-->
             <li><a href="/flight/calculator.php">Mass, Balance & Performance</a></li>
             <li><a href="/flight/cadet_latency.php">Track Progress</a></li>
             <li><a href="/flight/planning_request.php">Planning Request</a></li>
