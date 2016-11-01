@@ -3,28 +3,26 @@ include('../php/db_conn.php');
 
 if($_GET['id']>=0 && isset($_GET['id'])) {
     $instruction_id = $_GET['id'];
-    $query = "SELECT * FROM tbl_instructorinstructions JOIN tbl_cadets ON instructorinstruction_creator=cadet_id WHERE instructorinstruction_id='$instruction_id'";
+    $query = "SELECT * FROM tbl_plannerinstructions JOIN tbl_cadets ON plannerinstruction_creator=cadet_id WHERE plannerinstruction_id='$instruction_id'";
     $result = mysqli_query($link, $query);
     while($row = mysqli_fetch_array($result)) {
-      $instruction_content = $row['instructorinstruction_content'];
+      $instruction_content = $row['plannerinstruction_content'];
       $instruction_creator = $row['cadet_name'];
     }
 }
-$instructor = $_GET['inst'];
 ?>
-<form id="editForm" method="POST" action="../php/submitInstructorInstruction.php">
+<form id="editForm" method="POST" action="../php/submitPlannerInstruction.php">
 
 <div class="modal-header">
-  <h4 class="modal-title block-head" id="myModalLabel">Edit Instruction for <?php echo $instructor; ?></h4>
+  <h4 class="modal-title block-head" id="myModalLabel">Edit Planner Instruction</h4>
 </div>
 <div class="modal-body">
     <div class="row">
         <div class="col-md-12">
           <input type="hidden" value="<?php echo $_GET['id']; ?>" name="id" />
-            <input type="hidden" value="<?php echo $_GET['inst']; ?>" name="instructor" />
             <div class="form-group">
               <label>Instruction: </label>
-              <textarea class="form-control" name="instruction" id="instruction" placeholder="Any instructor-specific instructions to pass on to the next planner..." required><?php echo $instruction_content; ?></textarea>
+              <textarea class="form-control" name="instruction" id="instruction" placeholder="Any general instructions to pass on to the next planner..." required><?php echo $instruction_content; ?></textarea>
             </div>
             <?php
             if(isset($_GET['id']) && $_GET['id']>0) {

@@ -25,7 +25,7 @@ include('../php/db_conn.php');
           <div class="col-lg-12">
             <div class="panel panel-primary">
                 <!-- Default panel contents -->
-                <div class="panel-heading">Planner Instructions: <span class="pull-right"><i class="fa fa-plus"></i></span></div>
+                <div class="panel-heading">Planner Instructions: <span class="pull-right" onclick="modifyPlannerInstruction('0')"><i class="fa fa-plus"></i></span></div>
                 <!-- List group -->
                 <ul class="list-group">
                 <?php
@@ -33,7 +33,7 @@ include('../php/db_conn.php');
                 $result = mysqli_query($link, $query);
                 while($row = mysqli_fetch_array($result)) {
                   ?>
-                  <li class="list-group-item"><?php echo $row['plannerinstruction_content']; ?> <span class="text-muted pull-right"><small><?php echo $row['cadet_opsname']; ?></small></span></li>
+                  <li class="list-group-item"><a onclick="modifyPlannerInstruction('<?php echo $row['plannerinstruction_id']; ?>')"><?php echo $row['plannerinstruction_content']; ?> <span class="text-muted pull-right"><small><?php echo $row['cadet_opsname']; ?></small></span></a></li>
                   <?php
                 }
                 ?>
@@ -52,11 +52,11 @@ include('../php/db_conn.php');
               <!-- List group -->
               <ul class="list-group">
               <?php
-              $query = "SELECT cadet_opsname, sortie_code FROM tbl_repeatedsorties JOIN tbl_cadets ON repeatedsortie_cadet=cadet_id JOIN tbl_sorties ON repeatedsortie_sortie=sortie_id WHERE repeatedsortie_done='0'";
+              $query = "SELECT cadet_opsname, sortie_code, repeatedsortie_id FROM tbl_repeatedsorties JOIN tbl_cadets ON repeatedsortie_cadet=cadet_id JOIN tbl_sorties ON repeatedsortie_sortie=sortie_id WHERE repeatedsortie_done='0'";
               $result = mysqli_query($link, $query);
               while($row = mysqli_fetch_array($result)) {
                 ?>
-                <li class="list-group-item"><?php echo $row['cadet_opsname']; ?><br/ ><span class="text-muted"><small><?php echo $row['sortie_code']; ?></small></span></li>
+                <li class="list-group-item" onclick="markRepeatCompleted('<?php echo $row['repeatedsortie_id']; ?>')"><?php echo $row['cadet_opsname']; ?><br/ ><span class="text-muted"><small><?php echo $row['sortie_code']; ?></small></span></li>
                 <?php
               }
               ?>
@@ -69,7 +69,7 @@ include('../php/db_conn.php');
               <!-- List group -->
               <ul class="list-group">
               <?php
-              $query = "SELECT cadet_opsname, request_noplanstart, request_noplanend, request_remarks FROM tbl_requests JOIN tbl_cadets ON request_cadet=cadet_id WHERE request_type='no-plan' AND (DATE(NOW()) BETWEEN (request_noplanstart-INTERVAL 2 DAY) AND request_noplanend) ORDER BY request_noplanstart ASC";
+              $query = "SELECT cadet_opsname, request_noplanstart, request_noplanend, request_remarks FROM tbl_requests JOIN tbl_cadets ON request_cadet=cadet_id WHERE request_type='no-plan' AND (DATE(NOW())>=(request_noplanstart-INTERVAL 2 DAY) AND DATE(NOW())<=request_noplanend) ORDER BY request_noplanstart ASC";
               $result = mysqli_query($link, $query);
               while($row = mysqli_fetch_array($result)) {
                 ?>
@@ -86,11 +86,11 @@ include('../php/db_conn.php');
               <!-- List group -->
               <ul class="list-group">
               <?php
-              $query = "SELECT cadet_opsname, request_remarks FROM tbl_requests JOIN tbl_cadets ON request_cadet=cadet_id WHERE request_type='message'";
+              $query = "SELECT cadet_opsname, request_remarks, request_id FROM tbl_requests JOIN tbl_cadets ON request_cadet=cadet_id WHERE request_type='message' AND request_done='0'";
               $result = mysqli_query($link, $query);
               while($row = mysqli_fetch_array($result)) {
                 ?>
-                <li class="list-group-item"><small><?php echo $row['request_remarks']; ?></small>
+                <li class="list-group-item" onclick="markRequestCompleted('<?php echo $row['request_id']; ?>')"><small><?php echo $row['request_remarks']; ?></small>
                 <p class="text-right text-muted"><small>- <?php echo $row['cadet_opsname']; ?></small></li>
                 <?php
               }
@@ -214,6 +214,39 @@ include('../php/db_conn.php');
         if(statusTxt=="error")
           console.log("Error: "+xhr.status+": "+xhr.statusText);
       });
+    }
+    function modifyPlannerInstruction(id) {
+      $('#ajax').load( encodeURI("../ajax/modal_modifyPlannerInstruction.php?id="+id) ,function(responseTxt,statusTxt,xhr){
+        if(statusTxt=="success") {
+          $('#myModal').modal();
+        }
+        if(statusTxt=="error")
+          console.log("Error: "+xhr.status+": "+xhr.statusText);
+      });
+    }
+    function markRequestCompleted(id) {
+      if(confirm("Are you sure you have completed this request or passed it on to the next planner? \nMarking this as complete will remove it from this list.")) {
+        $('#ajax').load( encodeURI("../php/markRequestAsComplete.php?id="+id) ,function(responseTxt,statusTxt,xhr){
+          if(statusTxt=="success") {
+            //refresh request box
+            window.location.reload();
+          }
+          if(statusTxt=="error")
+            console.log("Error: "+xhr.status+": "+xhr.statusText);
+        });
+      }
+    }
+    function markRepeatCompleted(id) {
+      if(confirm("Are you sure this sortie has been PostFlighted i.e. green in TMS2? \nMarking this as complete will remove it from this list.")) {
+        $('#ajax').load( encodeURI("../php/markRepeatAsComplete.php?id="+id) ,function(responseTxt,statusTxt,xhr){
+          if(statusTxt=="success") {
+            //refresh request box
+            window.location.reload();
+          }
+          if(statusTxt=="error")
+            console.log("Error: "+xhr.status+": "+xhr.statusText);
+        });
+      }
     }
     </script>
   </body>
