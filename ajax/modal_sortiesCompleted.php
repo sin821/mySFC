@@ -5,16 +5,42 @@ include('../php/db_conn.php');
 	<h4 class="modal-title block-head" id="myModalLabel">Sortie Completion: <?php echo $_GET['cadet']; ?></h4>
 </div>
 <div class="modal-body">
+    <?php
+    $cadet = $_GET['cadet'];
+
+    $query = "SELECT cadet_crosswind, cadet_signedCCT, cadet_signedGH, cadet_signedNav FROM tbl_cadets WHERE cadet_name='$cadet'";
+    $result = mysqli_query($link, $query);
+    while($row = mysqli_fetch_array($result)) {
+        $signedCCT = $row['cadet_signedCCT'];
+        $signedGH = $row['cadet_signedGH'];
+        $signedNav = $row['cadet_signedNav'];
+        $crosswind = $row['cadet_crosswind'];
+    }
+    ?>
     <div class="row">
-        <div class="col-md-3">
-            Signed CCT:
+        <div class="col-md-12">
+            <div class="col-md-3 text-center well well-sm">
+                <p><b>Signed CCT:</b></p>
+                <p><?php echo $signedCCT; ?></p>
+            </div>
+            <div class="col-md-3 text-center well well-sm">
+                <p><b>Signed GH:</b></p>
+                <p><?php echo $signedGH; ?></p>
+            </div>
+            <div class="col-md-3 text-center well well-sm">
+                <p><b>Signed Nav:</b></p>
+                <p><?php echo $signedNav; ?></p>
+            </div>
+            <div class="col-md-3 text-center well well-sm">
+                <p><b>Crosswind:</b></p>
+                <p><?php echo $crosswind; ?></p>
+            </div>
         </div>
     </div>
     <div class="row">
         <div class="col-md-12">
         	<ul>
         	<?php
-        	$cadet = $_GET['cadet'];
 
         	$query = "SELECT syllabus_code FROM tbl_cadets JOIN tbl_syllabus ON cadet_syllabus=syllabus_id WHERE cadet_name='$cadet'";
         	$result = mysqli_query($link, $query);
