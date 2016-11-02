@@ -33,7 +33,7 @@ include('../php/db_conn.php');
                 $result = mysqli_query($link, $query);
                 while($row = mysqli_fetch_array($result)) {
                   ?>
-                  <li class="list-group-item"><a onclick="modifyPlannerInstruction('<?php echo $row['plannerinstruction_id']; ?>')"><?php echo $row['plannerinstruction_content']; ?> <span class="text-muted pull-right"><small><?php echo $row['cadet_opsname']; ?></small></span></a></li>
+                  <li class="list-group-item"><a onclick="modifyPlannerInstruction('<?php echo $row['plannerinstruction_id']; ?>')"><small><?php echo $row['plannerinstruction_content']; ?></small> <span class="text-muted pull-right"><small><?php echo $row['cadet_opsname']; ?></small></span></a></li>
                   <?php
                 }
                 ?>
@@ -56,7 +56,7 @@ include('../php/db_conn.php');
               $result = mysqli_query($link, $query);
               while($row = mysqli_fetch_array($result)) {
                 ?>
-                <li class="list-group-item" onclick="markRepeatCompleted('<?php echo $row['repeatedsortie_id']; ?>')"><?php echo $row['cadet_opsname']; ?><br/ ><span class="text-muted"><small><?php echo $row['sortie_code']; ?></small></span></li>
+                <li class="list-group-item clickable" onclick="markRepeatCompleted('<?php echo $row['repeatedsortie_id']; ?>')"><?php echo $row['cadet_opsname']; ?><br/ ><span class="text-muted"><small><?php echo $row['sortie_code']; ?></small></span></li>
                 <?php
               }
               ?>
@@ -90,7 +90,7 @@ include('../php/db_conn.php');
               $result = mysqli_query($link, $query);
               while($row = mysqli_fetch_array($result)) {
                 ?>
-                <li class="list-group-item" onclick="markRequestCompleted('<?php echo $row['request_id']; ?>')"><small><?php echo $row['request_remarks']; ?></small>
+                <li class="list-group-item clickable" onclick="markRequestCompleted('<?php echo $row['request_id']; ?>')"><small><?php echo $row['request_remarks']; ?></small>
                 <p class="text-right text-muted"><small>- <?php echo $row['cadet_opsname']; ?></small></li>
                 <?php
               }
@@ -119,7 +119,7 @@ include('../php/db_conn.php');
                   while($row2 = mysqli_fetch_array($result2)) {
                     $instruction_id = $row2['instructorinstruction_id'];
                     ?>
-                    <li><a onclick="modifyInstructorInstruction('<?php echo $instructor; ?>','<?php echo $instruction_id; ?>')"><?php echo $row2['instructorinstruction_content']; ?></a></li>
+                    <li><a onclick="modifyInstructorInstruction('<?php echo $instructor; ?>','<?php echo $instruction_id; ?>')"><small><?php echo $row2['instructorinstruction_content']; ?></small></a></li>
                     <?php
                   }
                   ?>

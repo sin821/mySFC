@@ -50,3 +50,11 @@ h1 {
   background-color: #f2dede;
   border-color: #ebccd1;
 }
+
+a:hover {
+  cursor: pointer;
+}
+
+.clickable:hover {
+  cursor: pointer;
+}

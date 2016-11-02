@@ -2,7 +2,7 @@
 include('../php/db_conn.php');
 ?>
 <div class="modal-header">
-	<h4 class="modal-title block-head" id="myModalLabel">Sortie Completion: <?php echo $_GET['cadet']; ?></h4>
+	<h4 class="modal-title block-head" id="myModalLabel">Track Progress: <?php echo $_GET['cadet']; ?></h4>
 </div>
 <div class="modal-body">
     <?php
@@ -39,7 +39,7 @@ include('../php/db_conn.php');
     </div>
     <div class="row">
         <div class="col-md-12">
-        	<ul>
+        	<ul class="list-group">
         	<?php
 
         	$query = "SELECT syllabus_code FROM tbl_cadets JOIN tbl_syllabus ON cadet_syllabus=syllabus_id WHERE cadet_name='$cadet'";
@@ -48,7 +48,7 @@ include('../php/db_conn.php');
         		$syllabus_code = $row['syllabus_code'];
         	}
 
-        	$query = "SELECT sortie_code FROM tbl_sorties WHERE sortie_syllabus='$syllabus_code'";
+        	$query = "SELECT sortie_code, sortie_type, sortie_area, sortie_duration, sortie_nature FROM tbl_sorties WHERE sortie_syllabus='$syllabus_code'";
         	$result = mysqli_query($link, $query);
         	while($row = mysqli_fetch_array($result)) {
         		if($syllabus_code=='MPL-M2') {
@@ -59,8 +59,20 @@ include('../php/db_conn.php');
         		}
         		$code = $output_array[0];
 
+                $duration = $row['sortie_duration']/60/60;
+
+                if($duration<1) {
+                    //express in minutes
+                    $duration = $duration*60;
+                    $duration = $duration.'min';
+                }
+                else {
+                    $duration = $duration.'hr';
+                }
+
         		?>
-        		<li><?php echo $row['sortie_code'] ?> - 
+        		<li class="list-group-item">
+                <p style="margin-bottom:0px;"><small><b><?php echo $row['sortie_code'] ?></b> - 
         		<?php
 
         		$query2 = "SELECT flightlist_sortie, flightlist_status, flightlist_date FROM tbl_flightlist WHERE (flightlist_pilot1='$cadet' OR flightlist_pilot2='$cadet') AND flightlist_sortie RLIKE '$code'";
@@ -87,6 +99,8 @@ include('../php/db_conn.php');
                     <?php
                 }
                 ?>
+                </small></p>
+                <p class="text-muted" style="margin-bottom:0px;"><small><?php echo $duration.' '.$row['sortie_area'].' '.$row['sortie_type'].' '.$row['sortie_nature'] ?></small></p>
 				</li>
 				<?php
 
