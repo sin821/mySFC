@@ -6,6 +6,11 @@ include('../php/db_conn.php');
 </div>
 <div class="modal-body">
     <div class="row">
+        <div class="col-md-3">
+            Signed CCT:
+        </div>
+    </div>
+    <div class="row">
         <div class="col-md-12">
         	<ul>
         	<?php
@@ -24,7 +29,7 @@ include('../php/db_conn.php');
         			preg_match("/\d{3}[AS]/sm", $row['sortie_code'], $output_array);
         		}
         		elseif($syllabus_code=='CPL-A-A'||$syllabus_code=='CPL-G-B') {
-        			preg_match("/(IPT)?\d{3}/sm", $row['sortie_code'], $output_array);
+        			preg_match("/(IPT)?S?\d{3}/sm", $row['sortie_code'], $output_array);
         		}
         		$code = $output_array[0];
 
@@ -43,6 +48,19 @@ include('../php/db_conn.php');
 					<?php
 				}
 				?>
+                <?php
+
+                $query2 = "SELECT flightlist_sortie, flightlist_status, flightlist_date FROM tbl_tms2currentplan WHERE (flightlist_pilot1='$cadet' OR flightlist_pilot2='$cadet') AND flightlist_sortie RLIKE '$code'";
+                $result2 = mysqli_query($link, $query2);
+                while($row2 = mysqli_fetch_array($result2)) {
+                    $class = 'text-muted';
+                    if($row2['flightlist_status']=='PostFlight') $class = 'text-success';
+                    if($row2['flightlist_status']=='Cancelled') $class = 'text-danger';
+                    ?>
+                    <span class="<?php echo $class; ?>"><?php echo $row2['flightlist_date'] ?></span>
+                    <?php
+                }
+                ?>
 				</li>
 				<?php
 
