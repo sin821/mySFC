@@ -274,13 +274,13 @@ include('../php/db_conn.php');
       var frontPaxMoment = Math.round(frontPax * 0.95428571);
       document.getElementById('frontPaxMoment').innerHTML = frontPaxMoment;
 
-      var rearPaxMoment = Math.round(rearPax * 0.53880597);
+      var rearPaxMoment = Math.round(rearPax / 0.53880597);
       document.getElementById('rearPaxMoment').innerHTML = rearPaxMoment;
 
       var bag1Moment = Math.round(bag1 * 2);
       document.getElementById('bag1Moment').innerHTML = bag1Moment;
 
-      var bag2Moment = Math.round(bag2 * 0.36666667);
+      var bag2Moment = Math.round(bag2 / 0.36666667);
       document.getElementById('bag2Moment').innerHTML = bag2Moment;
 
       var zeroFuelMoment = +aircraft[userAircraft]['moment'] + +frontPaxMoment + +rearPaxMoment + +bag1Moment + +bag2Moment;

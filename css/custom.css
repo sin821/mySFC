@@ -58,3 +58,7 @@ a:hover {
 .clickable:hover {
   cursor: pointer;
 }
+
+.panel-body ul {
+  padding-left: 15px;
+}

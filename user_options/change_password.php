@@ -32,28 +32,31 @@ $cadet_id = $_SESSION['cadet'];
                   <div class="panel-body">
                     <div class="row">
                       <div class="col-xs-12">
-                        <form class="form-horizontal" method="POST" action='../php/updatePassword.php'>
+                        <form class="form-horizontal" id='changePassForm' method="POST" action='../php/updatePassword.php'>
                             <div class="form-group">
-                              <label for="inputEmail3" class="col-sm-5 control-label">Old Password:</label>
+                              <label for="oldPass" class="col-sm-5 control-label">Old Password:</label>
                               <div class="col-sm-7">
-                                <input name='oldPassword' type="password" class="form-control" />
+                                <input id='oldPass' name='oldPassword' type="password" class="form-control" minlength="2" required />
                               </div>
                             </div>
                             <div class="form-group">
-                              <label for="inputEmail3" class="col-sm-5 control-label">New Password:</label>
+                              <label for="newPass" class="col-sm-5 control-label">New Password:</label>
                               <div class="col-sm-7">
-                                <input name='newPassword' type="password" class="form-control" />
+                                <input id='newPass' name='newPassword' type="password" class="form-control" required/>
                               </div>
                             </div>
                             <div class="form-group">
-                              <label for="inputEmail3" class="col-sm-5 control-label">Confirm Password:</label>
+                              <label for="newPassConfirmed" class="col-sm-5 control-label">Confirm Password:</label>
                               <div class="col-sm-7">
-                                <input name='confirmPassword' type="password" class="form-control" />
+                                <input id='newPassConfirmed' name='confirmPassword' type="password" class="form-control" required/>
                               </div>
+                            </div>
+                            <div class="text-red">
+                              <span id="errorSpan"></span>
                             </div>
 
                           <div class="text-right">
-                            <button type="submit" class="btn btn-success">Submit</button>
+                            <button type="button" class="btn btn-success" onclick="submitForm()">Submit</button>
                           </div>
                         </form>
                       </div>
@@ -75,6 +78,28 @@ $cadet_id = $_SESSION['cadet'];
     <!-- Page-dependent plugin scripts -->
 
     <!-- Page-dependent custom scripts -->
+
+    <script>
+    function submitForm() {
+      var error = 0;
+      var message = '';
+      var oldPass = document.getElementById('oldPass').value;
+      var newPass = document.getElementById('newPass').value;
+      var newPassConfirmed = document.getElementById('newPassConfirmed').value;
+        if(oldPass=='' || newPass=='' || newPassConfirmed=='') {
+          message += "You have left a required field blank.<br />";
+          error = 1;
+        }
+        if(newPass!=newPassConfirmed){
+          message += "Your new passwords in both fields do not match.<br />";
+          error = 1;
+        }
+        document.getElementById('errorSpan').innerHTML = message;
+        if(error==0) {
+          document.getElementById('changePassForm').submit();
+        }
+    }
+    </script>
 
   </body>
 </html>

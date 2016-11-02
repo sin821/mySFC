@@ -84,13 +84,13 @@ include('php/db_conn.php');
     <script>
     function passwordReset() {
       var email = document.getElementById('loginEmail').value;
-      var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      if(re.test(email)){
-        window.location = "php/requestPasswordReset.php?user="+email;
-      }
-      else {
-        document.getElementById('errorSpan').innerHTML = "Not a valid email address.";
-      }
+      $('#ajax').load( encodeURI("../ajax/modal_formResetPassword.php?email="+email) ,function(responseTxt,statusTxt,xhr){
+        if(statusTxt=="success") {
+          $('#myModal').modal();
+        }
+        if(statusTxt=="error")
+          console.log("Error: "+xhr.status+": "+xhr.statusText);
+      });
     }
 
     function loadRegistrationModal() {
