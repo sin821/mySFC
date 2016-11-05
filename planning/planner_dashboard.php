@@ -52,11 +52,11 @@ include('../php/db_conn.php');
               <!-- List group -->
               <ul class="list-group">
               <?php
-              $query = "SELECT cadet_opsname, sortie_code, repeatedsortie_id FROM tbl_repeatedsorties JOIN tbl_cadets ON repeatedsortie_cadet=cadet_id JOIN tbl_sorties ON repeatedsortie_sortie=sortie_id WHERE repeatedsortie_done='0'";
+              $query = "SELECT cadet_opsname, sortie_code, repeatedsortie_id, DATE(repeatedsortie_date) AS repeatedsortie_date FROM tbl_repeatedsorties JOIN tbl_cadets ON repeatedsortie_cadet=cadet_id JOIN tbl_sorties ON repeatedsortie_sortie=sortie_id WHERE repeatedsortie_done='0'";
               $result = mysqli_query($link, $query);
               while($row = mysqli_fetch_array($result)) {
                 ?>
-                <li class="list-group-item clickable" onclick="markRepeatCompleted('<?php echo $row['repeatedsortie_id']; ?>')"><?php echo $row['cadet_opsname']; ?><br/ ><span class="text-muted"><small><?php echo $row['sortie_code']; ?></small></span></li>
+                <li class="list-group-item clickable" onclick="markRepeatCompleted('<?php echo $row['repeatedsortie_id']; ?>')"><?php echo $row['cadet_opsname']; ?><br/ ><span class="text-muted"><small><?php echo $row['sortie_code']; ?></small><br /><small><?php echo date('j M',strtotime($row['repeatedsortie_date'])); ?></small></span></li>
                 <?php
               }
               ?>
