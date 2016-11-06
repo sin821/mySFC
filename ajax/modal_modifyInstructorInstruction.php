@@ -43,8 +43,23 @@ $instructor = $_GET['inst'];
 <div class="modal-footer">
   <div class="form-input pull-right">
         <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+        <?php
+        if(isset($_GET['id']) && $_GET['id']>0) {
+          ?>
+          <button type="button" class="btn btn-danger" onclick="deleteInstruction('<?php echo $instruction_id; ?>')">Delete</button>
+          <?php
+        }
+        ?>
         <button type="submit" class="btn btn-success">Submit</button>
     </div>
 </div>
 
 </form>
+
+<script>
+function deleteInstruction(id) {
+  if(confirm('Are you sure you want to delete this instruction?')) {
+    window.location = "../php/deleteInstructorInstruction.php?id="+id;
+  }
+}
+</script>

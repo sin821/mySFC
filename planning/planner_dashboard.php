@@ -101,30 +101,45 @@ include('../php/db_conn.php');
           </div>
           <div class="col-md-10">
           <?php
+          $row_organiser = 1;
           $query = "SELECT instructor_id, instructor_initials FROM tbl_instructors";
           $result = mysqli_query($link, $query);
           while($row = mysqli_fetch_array($result)) {
             $instructor_id = $row['instructor_id'];
             $instructor = $row['instructor_initials'];
+            if($row_organiser%3==0) echo "<div class='row'>";
             ?>
             <div class="col-md-4">
               <div class="panel panel-default">
                 <!-- Default panel contents -->
                 <div class="panel-heading"><?php echo $instructor; ?><span class="pull-right" onclick="modifyInstructorInstruction('<?php echo $instructor; ?>','0')"><i class="fa fa-plus"></i></span></div>
-                <div class="panel-body text-left">
-                  <ul>
-                  <?php
-                  $query2 = "SELECT * FROM tbl_instructorinstructions WHERE instructorinstruction_instructor='$instructor_id' AND instructorinstruction_done='0'";
-                  $result2 = mysqli_query($link, $query2);
-                  while($row2 = mysqli_fetch_array($result2)) {
-                    $instruction_id = $row2['instructorinstruction_id'];
-                    ?>
-                    <li><a onclick="modifyInstructorInstruction('<?php echo $instructor; ?>','<?php echo $instruction_id; ?>')"><small><?php echo $row2['instructorinstruction_content']; ?></small></a></li>
-                    <?php
-                  }
+
+                <?php
+                $query2 = "SELECT COUNT(*) AS instruction_count FROM tbl_instructorinstructions WHERE instructorinstruction_instructor='$instructor_id' AND instructorinstruction_done='0'";
+                $result2 = mysqli_query($link, $query2);
+                while($row2 = mysqli_fetch_array($result2)) {
+                  $instruction_count = $row2['instruction_count'];
+                }
+                if($instruction_count>0) {
+                  //do not do this is there are no instructions.
                   ?>
-                  </ul>
-                </div>
+                  <div class="panel-body text-left">
+                    <ul>
+                    <?php
+                    $query2 = "SELECT * FROM tbl_instructorinstructions WHERE instructorinstruction_instructor='$instructor_id' AND instructorinstruction_done='0'";
+                    $result2 = mysqli_query($link, $query2);
+                    while($row2 = mysqli_fetch_array($result2)) {
+                      $instruction_id = $row2['instructorinstruction_id'];
+                      ?>
+                      <li><a onclick="modifyInstructorInstruction('<?php echo $instructor; ?>','<?php echo $instruction_id; ?>')"><small><?php echo $row2['instructorinstruction_content']; ?></small></a></li>
+                      <?php
+                    }
+                    ?>
+                    </ul>
+                  </div>
+                  <?php
+                }
+                ?>
 
                 <!-- List group -->
                 <ul class="list-group">
@@ -174,6 +189,8 @@ include('../php/db_conn.php');
               </div>
             </div>
             <?php
+          if($row_organiser%3==0) echo "</div>";
+          $row_organiser++;
           }
           ?>
           </div>
