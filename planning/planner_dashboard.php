@@ -46,6 +46,10 @@ include('../php/db_conn.php');
 
           <div class="col-md-2">
 
+            <div class="panel">
+              <a class="btn btn-block btn-default" href="solo_list.php" target="_blank">View Solo List</a>
+            </div>
+
             <div class="panel panel-danger">
               <!-- Default panel contents -->
               <div class="panel-heading">Repeat Sorties</div>
@@ -152,10 +156,37 @@ include('../php/db_conn.php');
                   $cadet_name = $row2['cadet_name'];
 
                   //check if cadet is flying today
+                  $consecutive_duty = 0;
                   $query3 = "SELECT COUNT(*) AS planned_today FROM tbl_tms2currentplan WHERE flightlist_pilot1='$cadet_name' OR flightlist_pilot2='$cadet_name'";
                   $result3 = mysqli_query($link, $query3);
                   while($row3 = mysqli_fetch_array($result3)) {
                     $isPlanned = $row3['planned_today'];
+
+                    if($isPlanned!=0) { //if planned today
+                      $consecutive_duty = 1;
+                      //check if planned in the last 5 days.
+                      $i = 1;
+                      while($consecutive_duty==$i) { //while consecutive duty is the same number as the day being checked
+                        $query5 = "SELECT COUNT(*) AS planned FROM tbl_flightlist WHERE flightlist_date=DATE(NOW() - INTERVAL $i DAY) AND (flightlist_pilot1='$cadet_name' OR flightlist_pilot2='$cadet_name') AND flightlist_status='PostFlight'";
+                        $result5 = mysqli_query($link, $query5);
+                        while($row5 = mysqli_fetch_array($result5)) {
+                          $planned = $row5['planned'];
+                          if($planned!=0) { //if planned
+                            $consecutive_duty ++;
+                          } //if planned
+                        }
+                        $i++;
+                      }//while consecutive duty is the same number as the day being checked
+                      
+                    } //if planned today
+
+                  }
+
+                  if($consecutive_duty<5) {
+                  	$duty_class = "pull-left text-success";
+                  }
+                  else {
+                  	$duty_class = "pull-left text-red";
                   }
 
                   if($row2['total_latency']>=5 && $isPlanned==0) {
@@ -169,7 +200,9 @@ include('../php/db_conn.php');
                   }
                   ?>
                   <a onclick="getSorties('<?php echo $cadet_name; ?>')">
-                    <li class="<?php echo $class; ?>"><?php echo $row2['cadet_opsname']; ?>
+                    <li class="<?php echo $class; ?>">
+                    	<span class="<?php echo $duty_class; ?>"><?php echo $consecutive_duty; ?></span>
+                    <?php echo $row2['cadet_opsname']; ?>
                       <span class="pull-right">
                       <?php
                       if($isPlanned==0) {

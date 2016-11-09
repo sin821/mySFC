@@ -16,7 +16,7 @@
     <link href="../assets/surface-win8-workaround/ie10-viewport-bug-workaround.css" rel="stylesheet">
 
     <!-- Datatables CSS -->
-    <link href="../assets/datatables-1.10.12/datatables.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs-3.3.6/jqc-1.12.3/dt-1.10.12/fc-3.2.2/fh-3.1.2/r-2.1.0/datatables.min.css"/>
 
     <!-- FontAwesome CSS -->
     <link href="../assets/font-awesome-4.6.3/css/font-awesome.min.css" rel="stylesheet">

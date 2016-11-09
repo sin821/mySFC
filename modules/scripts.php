@@ -9,7 +9,7 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
 
-<script src="../assets/datatables-1.10.12/datatables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs-3.3.6/jqc-1.12.3/dt-1.10.12/fc-3.2.2/fh-3.1.2/r-2.1.0/datatables.min.js"></script>
 <script>
 $('body .dropdown-toggle').dropdown();
 </script>
