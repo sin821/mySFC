@@ -20,10 +20,41 @@ include('../php/db_conn.php');
     <?php include('../modules/alerts.php'); ?>
 
       <div class="starter-template">
-        <h1>Cadet Latency Report</h1>
+        <h1>Track Progress</h1>
 
         <div class="row">
           <div class="col-lg-offset-1 col-lg-10 col-md-12">
+            <?php
+            $cadet_id = $_SESSION['cadet'];
+            $user = $_SESSION['name'];
+            $syllabus_code = $_SESSION['syllabus'];
+
+            $query = "SELECT FLOOR(DATEDIFF(DATE(NOW()), DATE(cadet_startofcourse))/7) AS weeksSinceStart, cadet_startofcourse FROM tbl_cadets WHERE cadet_id='$cadet_id'";
+            $result = mysqli_query($link, $query);
+            while($row = mysqli_fetch_array($result)) {
+              $weeksSinceStart = $row['weeksSinceStart'];
+              $startofcourse = $row['cadet_startofcourse'];
+            }
+
+            $query = "SELECT COUNT(*) AS sortiesCompleted FROM tbl_flightlist WHERE flightlist_pilot1='$user' OR flightlist_pilot2='$user'";
+            $result = mysqli_query($link, $query);
+            while($row = mysqli_fetch_array($result)) {
+              $sortiesCompleted = $row['sortiesCompleted'];
+            }
+
+            $query = "SELECT COUNT(*) AS totalSorties FROM tbl_sorties WHERE sortie_syllabus='$syllabus_code'";
+            $result = mysqli_query($link, $query);
+            while($row = mysqli_fetch_array($result)) {
+              $totalSorties = $row['totalSorties'];
+            }
+
+            $avgFlightsPerWeek = $sortiesCompleted / $weeksSinceStart;
+            $estimatedCourseLengthDays = ceil($totalSorties / $avgFlightsPerWeek * 7);
+
+            $estimatedCompletionDate = date('j F Y', strtotime($startofcourse.' + '.$estimatedCourseLengthDays.' days'));
+
+            ?>
+            <p>Your estimated completion date is <b><?php echo $estimatedCompletionDate; ?></b></p>
             <table id="table" class="table table-hover table=condensed text-left">
               <thead>
                 <tr>
@@ -41,7 +72,6 @@ include('../php/db_conn.php');
               </thead>
               <tbody>
               <?php
-              $user = $_SESSION['name'];
               $query = "SELECT * FROM vw_latency WHERE dual_cadet LIKE '$user'";
               $result = mysqli_query($link, $query);
               while($row = mysqli_fetch_array($result)) {
