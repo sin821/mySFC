@@ -28,6 +28,7 @@ include('../php/db_conn.php');
               <thead>
                 <tr>
                   <th>Name</th>
+                  <th>Ops Name</th>
                   <th>Course</th>
                   <th>Instructor</th>
                   <th>Syllabus</th>
@@ -35,39 +36,16 @@ include('../php/db_conn.php');
               </thead>
               <tbody>
                 <?php
-                $query = "SELECT cadet_id, cadet_name, cadet_course, cadet_instructor, instructor_initials, cadet_syllabus, syllabus_code FROM tbl_cadets JOIN tbl_instructors ON cadet_instructor=instructor_id JOIN tbl_syllabus ON cadet_syllabus=syllabus_id WHERE 1";
+                $query = "SELECT cadet_id, cadet_name, cadet_opsname, cadet_course, cadet_instructor, instructor_initials, cadet_syllabus, syllabus_code FROM tbl_cadets JOIN tbl_instructors ON cadet_instructor=instructor_id JOIN tbl_syllabus ON cadet_syllabus=syllabus_id WHERE 1";
                 $result = mysqli_query($link, $query);
                 while($row = mysqli_fetch_array($result)) {
                   ?>
                   <tr>
-                    <td><?php echo $row['cadet_name']; ?></td>
+                    <td><a onclick="loadEditForm('<?php echo $row['cadet_id']; ?>')"><?php echo $row['cadet_name']; ?></a></td>
+                    <td><?php echo $row['cadet_opsname']; ?></td>
                     <td><?php echo $row['cadet_course']; ?></td>
-                    <td>
-                      <select id='instructorSelector' class="form-control" onchange="updateInstructor('<?php echo $row['cadet_id']; ?>')">
-                      <?php
-                      $query2 = "SELECT instructor_id, instructor_initials FROM tbl_instructors WHERE 1";
-                      $result2 = mysqli_query($link, $query2);
-                      while($row2 = mysqli_fetch_array($result2)) {
-                        ?>
-                        <option value="<?php echo $row2['instructor_id']; ?>" <?php if($row['cadet_instructor']==$row2['instructor_id']) echo 'selected'; ?>><?php echo $row2['instructor_initials']; ?></option>
-                        <?php
-                      }
-                      ?>
-                      </select>
-                    </td>
-                    <td>
-                      <select id='syllabusSelector' class="form-control" onchange="updateSyllabus('<?php echo $row['cadet_id']; ?>')">
-                      <?php
-                      $query2 = "SELECT syllabus_id, syllabus_code FROM tbl_syllabus WHERE 1";
-                      $result2 = mysqli_query($link, $query2);
-                      while($row2 = mysqli_fetch_array($result2)) {
-                        ?>
-                        <option value="<?php echo $row2['syllabus_id']; ?>" <?php if($row['cadet_syllabus']==$row2['syllabus_id']) echo 'selected'; ?>><?php echo $row2['syllabus_code']; ?></option>
-                        <?php
-                      }
-                      ?>
-                      </select>
-                    </td>
+                    <td><?php echo $row['instructor_initials']; ?></td>
+                    <td><?php echo $row['syllabus_code']; ?></td>
                   </tr>
                   <?php
                 }
@@ -100,6 +78,16 @@ include('../php/db_conn.php');
             "responsive": true
         });
     } );
+
+    function loadEditForm(cadet) {
+      $('#ajax').load( encodeURI("../ajax/modal_editCadet.php?cadet="+cadet) ,function(responseTxt,statusTxt,xhr){
+        if(statusTxt=="success") {
+          $('#myModal').modal();
+        }
+        if(statusTxt=="error")
+          console.log("Error: "+xhr.status+": "+xhr.statusText);
+      });
+    }
     </script>
   </body>
 </html>
