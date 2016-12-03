@@ -1,6 +1,6 @@
 <?php
 session_start([
-    'cookie_lifetime' => 86400,
+    'cookie_lifetime' => 2592000, //lasts 30 days
     'read_and_close'  => false,
 ]);
 include('db_conn.php');

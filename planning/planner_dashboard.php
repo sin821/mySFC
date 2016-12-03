@@ -90,12 +90,13 @@ include('../php/db_conn.php');
               <!-- List group -->
               <ul class="list-group">
               <?php
-              $query = "SELECT cadet_opsname, request_remarks, request_id FROM tbl_requests JOIN tbl_cadets ON request_cadet=cadet_id WHERE request_type='message' AND request_done='0'";
+              $query = "SELECT cadet_opsname, request_remarks, request_id, request_timestamp FROM tbl_requests JOIN tbl_cadets ON request_cadet=cadet_id WHERE request_type='message' AND request_done='0'";
               $result = mysqli_query($link, $query);
               while($row = mysqli_fetch_array($result)) {
                 ?>
                 <li class="list-group-item clickable" onclick="markRequestCompleted('<?php echo $row['request_id']; ?>')"><small><?php echo $row['request_remarks']; ?></small>
-                <p class="text-right text-muted"><small>- <?php echo $row['cadet_opsname']; ?></small></li>
+                <p class="text-right text-muted"><small>- <?php echo $row['cadet_opsname']." (".date('j M',strtotime($row['request_timestamp'])).")"; ?></small></p>
+                </li>
                 <?php
               }
               ?>

@@ -1,6 +1,6 @@
 <?php
 session_start([
-    'cookie_lifetime' => 86400,
+    'cookie_lifetime' => 2592000,
     'read_and_close'  => false,
 ]);
 if(!isset($_SESSION['cadet'])) header('location: /index.php?status=failed&msg=You need to log in.');
@@ -48,11 +48,31 @@ include('../php/db_conn.php');
 
               <hr />
 
-              <div class="form-group">
-                <textarea id="input-tms" name="flightList" class="form-control" placeholder="Copy and paste daily flight list from TMS2 here..."></textarea>
+
+              <div class="col-md-2">
+                <div class="panel panel-info">
+                  <!-- Default panel contents -->
+                  <div class="panel-heading">Update Log</div>
+                  <!-- List group -->
+                  <ul class="list-group">
+
+                  <?php
+                  $query = "SELECT DISTINCT(flightlist_date) AS flightlist_date FROM tbl_flightlist ORDER BY flightlist_date DESC LIMIT 5";
+                  $result = mysqli_query($link, $query);
+                  while($row = mysqli_fetch_array($result)) {
+                    ?>
+                    <li class="list-group-item"><?php echo date('j M',strtotime($row['flightlist_date'])); ?></li>
+                    <?php
+                  }
+                  ?>
+
+                  </ul>
+                </div>
               </div>
 
-              <hr />
+              <div class="col-md-10 form-group">
+                <textarea id="input-tms" name="flightList" class="form-control" placeholder="Copy and paste daily flight list from TMS2 here..."></textarea>
+              </div>
 
               <div class="form-group">
                 <button id="submit-btn" type="submit" class="btn btn-lg btn-block btn-success">Submit</button>

@@ -80,6 +80,6 @@ if($errorFlag==TRUE) {
 }
 else {
     $msg = "You have successfully updated the plan for today.";
-    header('location: ../planning/latency_report.php?status=success&msg='.$msg);
+    header('location: ../planning/planner_dashboard.php?status=success&msg='.$msg);
 }
 ?>
