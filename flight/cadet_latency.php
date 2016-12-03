@@ -155,7 +155,7 @@ include('../php/db_conn.php');
               </tbody>
             </table>
             <br />
-            <p><small class="text-muted">The latency reported here does not factor in ops duties or planning dudties when considering consecutive duty hours. If you can't see your own latency report, please inform a planner, it is most probably because your name in the database does not match the name used in the TMS system.</small></p>
+            <p><small class="text-muted">The latency reported here does not factor in ops duties or planning dudties when considering consecutive duty hours. If you can't see your own latency report, please inform a planner, it is most probably because your name in the database does not match the name used in the TMS system. The estimated completion date is only an estimate and does not factor in repeated sorties. If you have repeated sorties, your estimated date of completion will be longer than calculated.</small></p>
           </div>
         </div>
       </div>

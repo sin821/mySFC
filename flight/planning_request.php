@@ -87,6 +87,7 @@ include('../php/db_conn.php');
                             <textarea name='reason' class="form-control" required></textarea>
                           </div>
                         </div>
+                        <p class="text-muted"><small>If you are not using the Google Chrome datepicker, please type the dates in the YYYY-MM-DD format.</small></p>
                         <p class="text-red"><small><b>Planners cannot guarantee the approval of your requests but they will try as much as they can to grant them where the requests made are fair and reasonable.</b></small></p>
                         <div class="text-right">
                           <button type="submit" class="btn btn-success">Request No-Plan</button>
