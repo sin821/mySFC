@@ -63,7 +63,7 @@ include('../php/db_conn.php');
                       </div>
                       <div class="col-xs-6 load-form-group">
                         <label>Fuel:</label>
-                        <input id="fuelInput" type="number" class="form-control input-md text-center" value="190" min="0" max="220" onkeyup="calculateBalance()" onchange="calculateBalance()" />
+                        <input id="fuelInput" type="number" class="form-control input-md text-center" value="185" min="0" max="220" onkeyup="calculateBalance()" onchange="calculateBalance()" />
                       </div>
                     </div>
                     <table class="table table-bordered table-hover table-condensed">
@@ -157,11 +157,14 @@ include('../php/db_conn.php');
 
                 <div class="panel-body" id="cessnaPerformance">
                     <div class="row">
-                        <div class="col-xs-6 load-form-group">
+                        <div class="col-xs-4 load-form-group">
                             <label class="form-label">Temp: </label><input id="tempInput" class="form-control input-md text-center" type=number value="<?php echo $temp; ?>" onkeyup="calculatePerformance()" onchange="calculatePerformance()" />
                         </div>
-                        <div class="col-xs-6 load-form-group">
+                        <div class="col-xs-4 load-form-group">
                             <label class="form-label">QNH: </label><input id="qnhInput" class="form-control input-md text-center" type="number" value="<?php echo $qnh; ?>" onkeyup="calculatePerformance()" onchange="calculatePerformance()" />
+                        </div>
+                        <div class="col-xs-4 load-form-group">
+                            <label class="form-label">T-Wind: </label><input id="tWind" class="form-control input-md text-center" type="number" value="0" onkeyup="calculatePerformance()" onchange="calculatePerformance()" />
                         </div>
                         <span id="perfError" class="text-red"></span>
                         <p><small>Pressure Altitude: <u><span id="pressureAlt"></span>ft</u></small></p>
@@ -319,6 +322,7 @@ include('../php/db_conn.php');
 
       var qnh = document.getElementById('qnhInput').value;
       var temp = document.getElementById('tempInput').value;
+      var tailwind = document.getElementById('tWind').value;
       if(temp>=0&&temp<10) {
        tempCategory = 1;
       }
@@ -339,57 +343,60 @@ include('../php/db_conn.php');
       var pressureAlt = 100 + ((1013 - +qnh)*30);
       document.getElementById('pressureAlt').innerHTML = pressureAlt;
 
+      //calculate tailwind margin
+      var tailWindMargin = 1 + Math.ceil(tailwind/2) * 0.1;
+
       //calculate take off performance
       switch (tempCategory) {
-          case 1: takeoff0 = ((6.5 * temp) + 845) * 1.15;
+          case 1: takeoff0 = ((6.5 * temp) + 845) * 1.15 * tailWindMargin;
               break;
-          case 2: takeoff0 = ((7 * (temp-10)) + 910) * 1.15;
+          case 2: takeoff0 = ((7 * (temp-10)) + 910) * 1.15 * tailWindMargin;
               break;
-          case 3: takeoff0 = ((7.5 * (temp-20)) + 980) * 1.15;
+          case 3: takeoff0 = ((7.5 * (temp-20)) + 980) * 1.15 * tailWindMargin;
               break;
-          case 4: takeoff0 = ((8 * (temp-30)) + 1055) * 1.15;
+          case 4: takeoff0 = ((8 * (temp-30)) + 1055) * 1.15 * tailWindMargin;
               break;
-          default: takeoff0 = ((0 * (temp-100)) + 0) * 1.15;
+          default: takeoff0 = ((0 * (temp-100)) + 0) * 1.15 * tailWindMargin;
               break;
       }
 
       switch (tempCategory) {
-          case 1: takeoff50  = ((11.5 * temp) + 1510) * 1.15;
+          case 1: takeoff50  = ((11.5 * temp) + 1510) * 1.15 * tailWindMargin;
               break;
-          case 2: takeoff50  = ((12 * (temp-10)) + 1625) * 1.15;
+          case 2: takeoff50  = ((12 * (temp-10)) + 1625) * 1.15 * tailWindMargin;
               break;
-          case 3: takeoff50  = ((12.5 * (temp-20)) + 1745) * 1.15;
+          case 3: takeoff50  = ((12.5 * (temp-20)) + 1745) * 1.15 * tailWindMargin;
               break;
-          case 4: takeoff50  = ((13 * (temp-30)) + 1875) * 1.15;
+          case 4: takeoff50  = ((13 * (temp-30)) + 1875) * 1.15 * tailWindMargin;
               break;
-          default: takeoff50  = ((0 * (temp-100)) + 0) * 1.15;
+          default: takeoff50  = ((0 * (temp-100)) + 0) * 1.15 * tailWindMargin;
               break;
       }
 
         //calculate landing performance
         switch (tempCategory) {
-          case 1: landing0 = ((1.5 * temp) + 525) * 1.15;
+          case 1: landing0 = ((1.5 * temp) + 525) * 1.15 * tailWindMargin;
               break;
-          case 2: landing0 = ((2 * (temp-10)) + 540) * 1.15;
+          case 2: landing0 = ((2 * (temp-10)) + 540) * 1.15 * tailWindMargin;
               break;
-          case 3: landing0 = ((2.5 * (temp-20)) + 560) * 1.15;
+          case 3: landing0 = ((2.5 * (temp-20)) + 560) * 1.15 * tailWindMargin;
               break;
-          case 4: landing0 = ((3 * (temp-30)) + 580) * 1.15;
+          case 4: landing0 = ((3 * (temp-30)) + 580) * 1.15 * tailWindMargin;
               break;
-          default: landing0 = ((0 * (temp-100)) + 0) * 1.15;
+          default: landing0 = ((0 * (temp-100)) + 0) * 1.15 * tailWindMargin;
               break;
       }
 
       switch (tempCategory) {
-          case 1: landing50  = ((3 * temp) + 1250) * 1.15;
+          case 1: landing50  = ((3 * temp) + 1250) * 1.15 * tailWindMargin;
               break;
-          case 2: landing50  = ((3 * (temp-10)) + 1280) * 1.15;
+          case 2: landing50  = ((3 * (temp-10)) + 1280) * 1.15 * tailWindMargin;
               break;
-          case 3: landing50  = ((3 * (temp-20)) + 1310) * 1.15;
+          case 3: landing50  = ((3 * (temp-20)) + 1310) * 1.15 * tailWindMargin;
               break;
-          case 4: landing50  = ((3 * (temp-30)) + 1340) * 1.15;
+          case 4: landing50  = ((3 * (temp-30)) + 1340) * 1.15 * tailWindMargin;
               break;
-          default: landing50  = ((0 * (temp-100)) + 0) * 1.15;
+          default: landing50  = ((0 * (temp-100)) + 0) * 1.15 * tailWindMargin;
               break;
       }
 

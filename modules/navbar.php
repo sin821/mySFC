@@ -41,7 +41,7 @@
           <?php
         }
         ?>
-        <li><a href="/e-learning/contents.php">Mass Briefs</a></li>
+        <!--<li><a href="/e-learning/contents.php">Mass Briefs</a></li>-->
         <li><a href="/others/contact.php">Contact</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">

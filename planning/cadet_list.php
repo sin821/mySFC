@@ -24,6 +24,9 @@ include('../php/db_conn.php');
 
         <div class="row">
           <div class="col-lg-offset-1 col-lg-10 col-md-12">
+            <div class="col-xs-offset-3 col-xs-6">
+              <button type="button" class="btn btn-block btn-success" style="margin-bottom: 50px;"><i class="fa fa-plus"></i> Add Cadet</button>
+            </div>
             <table id="table" class="table table-hover table=condensed text-left">
               <thead>
                 <tr>
