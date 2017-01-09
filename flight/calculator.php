@@ -1,6 +1,6 @@
 <?php
 session_start([
-    'cookie_lifetime' => 86400,
+    'cookie_lifetime' => 2592000,
     'read_and_close'  => false,
 ]);
 if(!isset($_SESSION['cadet'])) header('location: /index.php?status=failed&msg=You need to log in.');
@@ -197,6 +197,7 @@ include('../php/db_conn.php');
                             <div class="col-xs-4"><p><u><span id="landing50m"></span></u> (m)</p></div>
                         </div>
                     </div>
+                    <p><small class="text-muted">Will interpolate for temperature and pressure altitude. For YH-series aircraft, add approximately 23ft to the calculations.</small></p>
                 </div>
             </div>
             <div class="panel panel-default">
@@ -211,6 +212,7 @@ include('../php/db_conn.php');
                             </tr>
                         </tbody>
                     </table>
+                    <p><small class="text-muted">Subtracts 6 litres for taxi fuel as per SFC SOP.</small></p>
                 </div>
             </div>
 
@@ -296,7 +298,7 @@ include('../php/db_conn.php');
       document.getElementById('takeOffMoment').innerHTML = takeOffMoment;
 
       //calculate fuel endurance, 5 litres deducted for taxi
-      var endurance = Math.round(((fuel - 5)/35)*60);
+      var endurance = Math.round(((fuel - 6)/35)*60);
       document.getElementById('endurance').innerHTML = endurance;
 
       //push alerts to user if out of range
@@ -343,31 +345,33 @@ include('../php/db_conn.php');
       var pressureAlt = 100 + ((1013 - +qnh)*30);
       document.getElementById('pressureAlt').innerHTML = pressureAlt;
 
+      var pressureAltCorrectionFactor = pressureAlt/100;
+
       //calculate tailwind margin
       var tailWindMargin = 1 + Math.ceil(tailwind/2) * 0.1;
 
       //calculate take off performance
       switch (tempCategory) {
-          case 1: takeoff0 = ((6.5 * temp) + 845) * 1.15 * tailWindMargin;
+          case 1: takeoff0 = ((6.5 * temp) + 845 + (pressureAltCorrectionFactor * 8)) * 1.15 * tailWindMargin;
               break;
-          case 2: takeoff0 = ((7 * (temp-10)) + 910) * 1.15 * tailWindMargin;
+          case 2: takeoff0 = ((7 * (temp-10)) + 910 + (pressureAltCorrectionFactor * 9)) * 1.15 * tailWindMargin;
               break;
-          case 3: takeoff0 = ((7.5 * (temp-20)) + 980) * 1.15 * tailWindMargin;
+          case 3: takeoff0 = ((7.5 * (temp-20)) + 980 + (pressureAltCorrectionFactor * 9.5)) * 1.15 * tailWindMargin;
               break;
-          case 4: takeoff0 = ((8 * (temp-30)) + 1055) * 1.15 * tailWindMargin;
+          case 4: takeoff0 = ((8 * (temp-30)) + 1055 + (pressureAltCorrectionFactor * 10.5)) * 1.15 * tailWindMargin;
               break;
           default: takeoff0 = ((0 * (temp-100)) + 0) * 1.15 * tailWindMargin;
               break;
       }
 
       switch (tempCategory) {
-          case 1: takeoff50  = ((11.5 * temp) + 1510) * 1.15 * tailWindMargin;
+          case 1: takeoff50  = ((11.5 * temp) + 1510 + (pressureAltCorrectionFactor * 15)) * 1.15 * tailWindMargin;
               break;
-          case 2: takeoff50  = ((12 * (temp-10)) + 1625) * 1.15 * tailWindMargin;
+          case 2: takeoff50  = ((12 * (temp-10)) + 1625 + (pressureAltCorrectionFactor * 16.5)) * 1.15 * tailWindMargin;
               break;
-          case 3: takeoff50  = ((12.5 * (temp-20)) + 1745) * 1.15 * tailWindMargin;
+          case 3: takeoff50  = ((12.5 * (temp-20)) + 1745 + (pressureAltCorrectionFactor * 18)) * 1.15 * tailWindMargin;
               break;
-          case 4: takeoff50  = ((13 * (temp-30)) + 1875) * 1.15 * tailWindMargin;
+          case 4: takeoff50  = ((13 * (temp-30)) + 1875 + (pressureAltCorrectionFactor * 19.5)) * 1.15 * tailWindMargin;
               break;
           default: takeoff50  = ((0 * (temp-100)) + 0) * 1.15 * tailWindMargin;
               break;
@@ -375,26 +379,26 @@ include('../php/db_conn.php');
 
         //calculate landing performance
         switch (tempCategory) {
-          case 1: landing0 = ((1.5 * temp) + 525) * 1.15 * tailWindMargin;
+          case 1: landing0 = ((1.5 * temp) + 525 + (pressureAltCorrectionFactor * 2)) * 1.15 * tailWindMargin;
               break;
-          case 2: landing0 = ((2 * (temp-10)) + 540) * 1.15 * tailWindMargin;
+          case 2: landing0 = ((2 * (temp-10)) + 540 + (pressureAltCorrectionFactor * 2)) * 1.15 * tailWindMargin;
               break;
-          case 3: landing0 = ((2.5 * (temp-20)) + 560) * 1.15 * tailWindMargin;
+          case 3: landing0 = ((2.5 * (temp-20)) + 560 + (pressureAltCorrectionFactor * 2)) * 1.15 * tailWindMargin;
               break;
-          case 4: landing0 = ((3 * (temp-30)) + 580) * 1.15 * tailWindMargin;
+          case 4: landing0 = ((3 * (temp-30)) + 580 + (pressureAltCorrectionFactor * 2)) * 1.15 * tailWindMargin;
               break;
           default: landing0 = ((0 * (temp-100)) + 0) * 1.15 * tailWindMargin;
               break;
       }
 
       switch (tempCategory) {
-          case 1: landing50  = ((3 * temp) + 1250) * 1.15 * tailWindMargin;
+          case 1: landing50  = ((3 * temp) + 1250 + (pressureAltCorrectionFactor * 3)) * 1.15 * tailWindMargin;
               break;
-          case 2: landing50  = ((3 * (temp-10)) + 1280) * 1.15 * tailWindMargin;
+          case 2: landing50  = ((3 * (temp-10)) + 1280 + (pressureAltCorrectionFactor * 3)) * 1.15 * tailWindMargin;
               break;
-          case 3: landing50  = ((3 * (temp-20)) + 1310) * 1.15 * tailWindMargin;
+          case 3: landing50  = ((3 * (temp-20)) + 1310 + (pressureAltCorrectionFactor * 3.5)) * 1.15 * tailWindMargin;
               break;
-          case 4: landing50  = ((3 * (temp-30)) + 1340) * 1.15 * tailWindMargin;
+          case 4: landing50  = ((3 * (temp-30)) + 1340 + (pressureAltCorrectionFactor * 3.5)) * 1.15 * tailWindMargin;
               break;
           default: landing50  = ((0 * (temp-100)) + 0) * 1.15 * tailWindMargin;
               break;

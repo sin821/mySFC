@@ -1,9 +1,9 @@
 <?php
 session_start([
-    'cookie_lifetime' => 86400,
+    'cookie_lifetime' => 2592000,
     'read_and_close'  => false,
 ]);
-if(!isset($_SESSION['cadet'])) header('location: /index.php?status=failed&msg=You need to log in.');
+if(!isset($_SESSION['cadet'])||($_SESSION['role']==0)||($_SESSION['role']==2)) header('location: /index.php?status=failed&msg=You need to log in.');
 include('../php/db_conn.php');
 ?>
 
@@ -24,9 +24,9 @@ include('../php/db_conn.php');
 
         <div class="row">
           <div class="col-lg-offset-1 col-lg-10 col-md-12">
-            <div class="col-xs-offset-3 col-xs-6">
+            <!--<div class="col-xs-offset-3 col-xs-6">
               <button type="button" class="btn btn-block btn-success" style="margin-bottom: 50px;"><i class="fa fa-plus"></i> Add Cadet</button>
-            </div>
+            </div>-->
             <table id="table" class="table table-hover table=condensed text-left">
               <thead>
                 <tr>

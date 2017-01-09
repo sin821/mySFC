@@ -1,12 +1,12 @@
 <?php
 session_start([
-    'cookie_lifetime' => 86400,
+    'cookie_lifetime' => 2592000,
     'read_and_close'  => false,
 ]);
 if(!isset($_SESSION['cadet'])) header('location: /index.php?status=failed&msg=You need to log in.');
 include('../php/db_conn.php');
 $cadet_id = $_SESSION['cadet'];
-$query = "SELECT cadet_crosswind, cadet_rwy0624, cadet_rwy12, cadet_rwy30, cadet_signedCCT, cadet_signedGH, cadet_signedNav, cadet_weight, cadet_startOfCourse FROM tbl_cadets WHERE cadet_id = '$cadet_id'";
+$query = "SELECT cadet_crosswind, cadet_rwy0624, cadet_rwy12, cadet_rwy30, cadet_signedCCT, cadet_signedGH, cadet_signedNav, cadet_weight, cadet_startOfCourse, cadet_repeatedsorties FROM tbl_cadets WHERE cadet_id = '$cadet_id'";
 $result = mysqli_query($link, $query);
 while($row = mysqli_fetch_array($result)){
 $db_crosswind = $row['cadet_crosswind'];
@@ -18,6 +18,7 @@ $db_signedGH = $row['cadet_signedGH'];
 $db_signedNav = $row['cadet_signedNav'];
 $db_weight = $row['cadet_weight'];
 $db_startOfCourse = date('Y-m-d', strtotime($row['cadet_startOfCourse']));
+$db_repeatedsorties = $row['cadet_repeatedsorties'];
 }
 ?>
 
@@ -155,15 +156,21 @@ $db_startOfCourse = date('Y-m-d', strtotime($row['cadet_startOfCourse']));
                     <div class="col-xs-12">
                       <form class="form-horizontal" method="POST" action='../php/updateAccountDetails.php'>
                         <div class="form-group">
-                          <label for="inputEmail3" class="col-sm-5 control-label">Cadet Weight:</label>
+                          <label for="weight" class="col-sm-5 control-label">Cadet Weight:</label>
                           <div class="col-sm-7">
                             <input name='weight' type="number" class="form-control" value="<?php echo $db_weight; ?>"/>
                           </div>
                         </div>
                         <div class="form-group">
-                          <label for="inputEmail3" class="col-sm-5 control-label">Start of Course:</label>
+                          <label for="date" class="col-sm-5 control-label">Start of Course:</label>
                           <div class="col-sm-7">
                             <input name='date' type="date" class="form-control" value="<?php echo $db_startOfCourse; ?>"/>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label for="repeatedSorties" class="col-sm-5 control-label">Repeated Sorties:</label>
+                          <div class="col-sm-7">
+                            <input name='repeatedsorties' type="number" class="form-control" value="<?php echo $db_repeatedsorties; ?>"/>
                           </div>
                         </div>
 

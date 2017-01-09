@@ -1,6 +1,6 @@
 <?php
 session_start([
-    'cookie_lifetime' => 86400,
+    'cookie_lifetime' => 2592000,
     'read_and_close'  => false,
 ]);
 if(!isset($_SESSION['cadet'])) header('location: /index.php?status=failed&msg=You need to log in.');
@@ -36,7 +36,7 @@ include('../php/db_conn.php');
               $startofcourse = $row['cadet_startofcourse'];
             }
 
-            $query = "SELECT COUNT(*) AS sortiesCompleted FROM tbl_flightlist WHERE flightlist_pilot1='$user' OR flightlist_pilot2='$user'";
+            $query = "SELECT COUNT(*) AS sortiesCompleted FROM tbl_flightlist WHERE (flightlist_pilot1='$user' OR flightlist_pilot2='$user') AND flightlist_status='PostFlight'";
             $result = mysqli_query($link, $query);
             while($row = mysqli_fetch_array($result)) {
               $sortiesCompleted = $row['sortiesCompleted'];
@@ -48,7 +48,13 @@ include('../php/db_conn.php');
               $totalSorties = $row['totalSorties'];
             }
 
-            $avgFlightsPerWeek = $sortiesCompleted / $weeksSinceStart;
+            $query = "SELECT cadet_repeatedsorties FROM tbl_cadets WHERE cadet_name='$user'";
+            $result = mysqli_query($link, $query);
+            while($row = mysqli_fetch_array($result)) {
+              $repeatedsorties = $row['cadet_repeatedsorties'];
+            }
+
+            $avgFlightsPerWeek = ($sortiesCompleted-$repeatedsorties) / $weeksSinceStart;
             $estimatedCourseLengthDays = ceil($totalSorties / $avgFlightsPerWeek * 7);
 
             $estimatedCompletionDate = date('j F Y', strtotime($startofcourse.' + '.$estimatedCourseLengthDays.' days'));
@@ -155,7 +161,7 @@ include('../php/db_conn.php');
               </tbody>
             </table>
             <br />
-            <p><small class="text-muted">The latency reported here does not factor in ops duties or planning dudties when considering consecutive duty hours. If you can't see your own latency report, please inform a planner, it is most probably because your name in the database does not match the name used in the TMS system. The estimated completion date is only an estimate and does not factor in repeated sorties. If you have repeated sorties, your estimated date of completion will be longer than calculated.</small></p>
+            <p><small class="text-muted">The latency reported here does not factor in ops duties or planning duties when computing consecutive duty hours. If you can't see your own latency report, you must inform a planner, it is probably because your name in the database does not match the name used in the TMS system. The estimated completion date is only an estimate and does not consider potential changes in average latency. If you have repeated sorties or have not indicated your start of course date, you must update them <a href='../user_options/update_details.php'>here</a>.</small></p>
           </div>
         </div>
       </div>

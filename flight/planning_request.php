@@ -1,6 +1,6 @@
 <?php
 session_start([
-    'cookie_lifetime' => 86400,
+    'cookie_lifetime' => 2592000,
     'read_and_close'  => false,
 ]);
 if(!isset($_SESSION['cadet'])) header('location: /index.php?status=failed&msg=You need to log in.');
@@ -23,7 +23,7 @@ include('../php/db_conn.php');
         <h2>Submit a Flight Planning Request</h2>
 
         <div class="row">
-          <div class="col-lg-offset-2 col-lg-8 col-md-12">
+          <div class="col-lg-offset-2 col-lg-8 col-md-10">
             <div class="panel panel-default">
                 <div class="panel-heading">Repeat Sortie</div>
 
@@ -48,6 +48,7 @@ include('../php/db_conn.php');
                             </select>
                           </div>
                         </div>
+                        <p class="text-red"><small><b>If you have to repeat a repeated sortie, you should submit a new repeat sortie request.</b></small></p>
                         <p class="text-muted"><small>Repeated sorties are sorties that have been PostFlighted (NOT CANCELLED) in TMS2 where the 'repeat sortie' checkbox has been checked. Indicating repeated sorties to planners will allow planners to re-plan you for the same sortie.</small></p>
                         <div class="text-right">
                           <button type="submit" class="btn btn-success">Report</button>

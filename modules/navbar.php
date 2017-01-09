@@ -30,18 +30,31 @@
               Planning Tools <span class="caret"></span>
             </a>
             <ul class="dropdown-menu">
-              <li><a href="/planning/planner_dashboard.php">Dashboard</a></li>
-              <li><a href="/planning/solo_list.php">Solo List</a></li>
-              <li><a href="/planning/update_TMS2_flightlist.php">Update TMS2 Latency</a></li>
-              <li><a href="/planning/generate_TMS2_plan.php">Input Current TMS2 Plan</a></li>
-              <!--<li><a href="/planning/latency_report.php">Latency Report</a></li>-->
-              <li><a href="/planning/cadet_list.php">Manage Cadets</a></li>
+              <?php
+              if($_SESSION['role']==1) { //for planners only
+                ?>
+                <li><a href="/planning/planner_dashboard.php">Dashboard</a></li>
+                <li><a href="/planning/solo_list.php">Solo List</a></li>
+                <li><a href="/planning/update_TMS2_flightlist.php">Update TMS2 Latency</a></li>
+                <li><a href="/planning/generate_TMS2_plan.php">Input Current TMS2 Plan</a></li>
+                <!--<li><a href="/planning/latency_report.php">Latency Report</a></li>-->
+                <li><a href="/planning/cadet_list.php">Manage Cadets</a></li>
+                <?php
+                }
+              ?>
+              <?php
+              if($_SESSION['role']==2||$_SESSION['role']==1) { //for lead cadets and planners only
+                ?>
+                <li><a href="/planning/leadcadet_dashboard.php">Lead Cadet Dashboard</a></li>
+                <?php
+                }
+              ?>
             </ul>
           </li>
           <?php
         }
         ?>
-        <!--<li><a href="/e-learning/contents.php">Mass Briefs</a></li>-->
+        <li><a href="/e-learning/player.php">Mass Briefs</a></li>
         <li><a href="/others/contact.php">Contact</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">

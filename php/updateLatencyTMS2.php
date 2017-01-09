@@ -19,7 +19,7 @@ if (preg_match("#^\d{2}/\d{2}/\d{4}#sm", $input, $date)) {
             mysqli_query($link, $query);
         }
         //do regex check for required information
-        preg_match_all("#^\d+\t (PostFlight|Cancelled)\t([AB]\d{3}S? ?.?[1A-Z]?|[AB]IPTS?\d{3} ?[A-Z]?|M2-\d{3}[AFS]-?S? ?[A-Z]?|M\d{3}[AF] ?[A-Z]?)\t (VH-\w{3}|F141-G|F242-G)\t (\d{2}:\d{2})\t (\w+ ?-?/?\w* ?-?/?\w* ?-?/?\w* ?-?/?\w* ?-?/?\w* ?-?/?\w*)\t (\w+ ?-?/?\w* ?-?/?\w* ?-?/?\w* ?-?/?\w* ?-?/?\w* ?-?/?\w*)?#sm", $input, $matches);
+        preg_match_all("#^\d+\t (PostFlight|Cancelled)\t([AB]\d{3}S? ?.?[1A-Z]?|[AB]IPTS?\d{3} ?[A-Z]?|M2-\d{3}[AFS].?1?-?S? ?[A-Z]?|M\d{3}[AFS].?1?-?S? ?[A-Z]?)\t (VH-\w{3}|F141-G|F242-G)\t (\d{2}:\d{2})\t (\w+ ?-?/?\w* ?-?/?\w* ?-?/?\w* ?-?/?\w* ?-?/?\w* ?-?/?\w*)\t (\w+ ?-?/?\w* ?-?/?\w* ?-?/?\w* ?-?/?\w* ?-?/?\w* ?-?/?\w*)?#sm", $input, $matches);
 
         $arrlength = count($matches[1]);
 
@@ -33,6 +33,13 @@ if (preg_match("#^\d{2}/\d{2}/\d{4}#sm", $input, $date)) {
             }
             if($sortie=='A328S.1') {
                 $sortie = 'A328S';
+            }
+            //special correction for M163A-S which has 3 parts to it
+            if($sortie=='M2-163A.1-S') {
+                $sortie = 'M2-163A-S';
+            }
+            if($sortie=='M163A.1-S') {
+                $sortie = 'M163A-S';
             }
             $aircraft = $matches[3][$x];
             $etd = $matches[4][$x];

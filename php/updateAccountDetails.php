@@ -1,6 +1,6 @@
 <?php
 session_start([
-    'cookie_lifetime' => 86400,
+    'cookie_lifetime' => 2592000,
     'read_and_close'  => false,
 ]);
 if(!isset($_SESSION['cadet'])) header('location: /index.php?status=failed&msg=You need to log in.');
@@ -9,8 +9,9 @@ $cadet_id = $_SESSION['cadet'];
 
 $weight = $_POST['weight'];
 $date = $_POST['date'];
+$repeatedsorties = $_POST['repeatedsorties'];
 
-$query = "UPDATE tbl_cadets SET cadet_weight = '$weight', cadet_startOfCourse ='$date' WHERE cadet_id = '$cadet_id'";
+$query = "UPDATE tbl_cadets SET cadet_weight = '$weight', cadet_startOfCourse ='$date', cadet_repeatedsorties ='$repeatedsorties' WHERE cadet_id = '$cadet_id'";
 $result = mysqli_query($link,$query);
 
 if($result) {

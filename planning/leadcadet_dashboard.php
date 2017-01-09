@@ -3,8 +3,14 @@ session_start([
     'cookie_lifetime' => 2592000,
     'read_and_close'  => false,
 ]);
-if(!isset($_SESSION['cadet'])||($_SESSION['role']==0)||($_SESSION['role']==2)) header('location: /index.php?status=failed&msg=You need to log in.');
+if(!isset($_SESSION['cadet'])||($_SESSION['role']==0)) header('location: /index.php?status=failed&msg=You need to log in.');
 include('../php/db_conn.php');
+$cadet_id = $_SESSION['cadet'];
+$query = "SELECT cadet_instructor FROM tbl_cadets WHERE cadet_id='$cadet_id'";
+$result = mysqli_query($link, $query);
+while($row = mysqli_fetch_array($result)) {
+  $leadcadet_instructor = $row['cadet_instructor'];
+}
 ?>
 
 <!DOCTYPE html>
@@ -22,33 +28,8 @@ include('../php/db_conn.php');
       <div class="starter-template">
 
         <div class="row">
-          <div class="col-lg-12">
-            <div class="panel panel-primary">
-                <!-- Default panel contents -->
-                <div class="panel-heading">Planner Instructions: <span class="pull-right" onclick="modifyPlannerInstruction('0')"><i class="fa fa-plus"></i></span></div>
-                <!-- List group -->
-                <ul class="list-group">
-                <?php
-                $query = "SELECT * FROM tbl_plannerinstructions JOIN tbl_cadets ON plannerinstruction_creator=cadet_id WHERE plannerinstruction_done='0'";
-                $result = mysqli_query($link, $query);
-                while($row = mysqli_fetch_array($result)) {
-                  ?>
-                  <li class="list-group-item"><a onclick="modifyPlannerInstruction('<?php echo $row['plannerinstruction_id']; ?>')"><small><?php echo $row['plannerinstruction_content']; ?></small> <span class="text-muted pull-right"><small><?php echo $row['cadet_opsname']; ?></small></span></a></li>
-                  <?php
-                }
-                ?>
-                </ul>
-              </div>
-          </div>
-        </div>
-
-        <div class="row">
 
           <div class="col-md-2">
-
-            <div class="panel">
-              <a class="btn btn-block btn-default" href="solo_list.php" target="_blank">View Solo List</a>
-            </div>
 
             <div class="panel panel-danger">
               <!-- Default panel contents -->
@@ -56,7 +37,7 @@ include('../php/db_conn.php');
               <!-- List group -->
               <ul class="list-group">
               <?php
-              $query = "SELECT cadet_opsname, cadet_name, sortie_code, repeatedsortie_id, DATE(repeatedsortie_date) AS repeatedsortie_date FROM tbl_repeatedsorties JOIN tbl_cadets ON repeatedsortie_cadet=cadet_id JOIN tbl_sorties ON repeatedsortie_sortie=sortie_id WHERE repeatedsortie_done='0'";
+              $query = "SELECT cadet_opsname, cadet_name, sortie_code, repeatedsortie_id, DATE(repeatedsortie_date) AS repeatedsortie_date FROM tbl_repeatedsorties JOIN tbl_cadets ON repeatedsortie_cadet=cadet_id JOIN tbl_sorties ON repeatedsortie_sortie=sortie_id WHERE repeatedsortie_done='0' AND cadet_instructor='$leadcadet_instructor'";
               $result = mysqli_query($link, $query);
               while($row = mysqli_fetch_array($result)) {
                 ?>
@@ -79,7 +60,7 @@ include('../php/db_conn.php');
               <!-- List group -->
               <ul class="list-group">
               <?php
-              $query = "SELECT cadet_opsname, request_noplanstart, request_noplanend, request_remarks FROM tbl_requests JOIN tbl_cadets ON request_cadet=cadet_id WHERE request_type='no-plan' AND (DATE(NOW())>=(request_noplanstart-INTERVAL 2 DAY) AND DATE(NOW())<=request_noplanend) ORDER BY request_noplanstart ASC";
+              $query = "SELECT cadet_opsname, request_noplanstart, request_noplanend, request_remarks FROM tbl_requests JOIN tbl_cadets ON request_cadet=cadet_id WHERE request_type='no-plan' AND cadet_instructor='$leadcadet_instructor' AND (DATE(NOW())>=(request_noplanstart-INTERVAL 2 DAY) AND DATE(NOW())<=request_noplanend) ORDER BY request_noplanstart ASC";
               $result = mysqli_query($link, $query);
               while($row = mysqli_fetch_array($result)) {
                 ?>
@@ -96,7 +77,7 @@ include('../php/db_conn.php');
               <!-- List group -->
               <ul class="list-group">
               <?php
-              $query = "SELECT cadet_opsname, request_remarks, request_id, request_timestamp FROM tbl_requests JOIN tbl_cadets ON request_cadet=cadet_id WHERE request_type='message' AND request_done='0'";
+              $query = "SELECT cadet_opsname, request_remarks, request_id, request_timestamp FROM tbl_requests JOIN tbl_cadets ON request_cadet=cadet_id WHERE request_type='message' AND request_done='0' AND cadet_instructor='$leadcadet_instructor'";
               $result = mysqli_query($link, $query);
               while($row = mysqli_fetch_array($result)) {
                 ?>
@@ -113,7 +94,7 @@ include('../php/db_conn.php');
           <div class="col-md-10">
           <?php
           $row_organiser = 1;
-          $query = "SELECT instructor_id, instructor_initials FROM tbl_instructors";
+          $query = "SELECT instructor_id, instructor_initials FROM tbl_instructors WHERE instructor_id='$leadcadet_instructor'";
           $result = mysqli_query($link, $query);
           while($row = mysqli_fetch_array($result)) {
             $instructor_id = $row['instructor_id'];
