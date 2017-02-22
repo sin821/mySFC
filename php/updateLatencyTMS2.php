@@ -19,7 +19,7 @@ if (preg_match("#^\d{2}/\d{2}/\d{4}#sm", $input, $date)) {
             mysqli_query($link, $query);
         }
         //do regex check for required information
-        preg_match_all("#^\d+\t (PostFlight|Cancelled)\t([AB]\d{3}S? ?.?[1A-Z]?|[AB]IPTS?\d{3} ?[A-Z]?|M2-\d{3}[AFS].?1?-?S? ?[A-Z]?|M\d{3}[AFS].?1?-?S? ?[A-Z]?)\t (VH-\w{3}|F141-G|F242-G)\t (\d{2}:\d{2})\t (\w+ ?-?/?\w* ?-?/?\w* ?-?/?\w* ?-?/?\w* ?-?/?\w* ?-?/?\w*)\t (\w+ ?-?/?\w* ?-?/?\w* ?-?/?\w* ?-?/?\w* ?-?/?\w* ?-?/?\w*)?#sm", $input, $matches);
+        preg_match_all("#^\d+\t (PostFlight|Cancelled)\t([AB]\d{3}S? ?.?[1A-Z]?|[AB]IPTS?\d{3} ?[A-Z]?|M2-\d{3}[AFS].?1?-?S? ?[A-Z]?|M\d{3}[AFS].?1?-?S? ?[A-Z]?)\t (VH-\w{3}|F141-G|F242-G)\t (\d{2}:\d{2})\t (\w+ ?-?'?/?\w* ?-?'?/?\w* ?-?'?/?\w* ?-?'?/?\w* ?-?'?/?\w* ?-?'?/?\w*)\t (\w+ ?-?'?/?\w* ?-?'?/?\w* ?-?'?/?\w* ?-?'?/?\w* ?-?'?/?\w* ?-?'?/?\w*)?#sm", $input, $matches);
 
         $arrlength = count($matches[1]);
 
@@ -43,8 +43,8 @@ if (preg_match("#^\d{2}/\d{2}/\d{4}#sm", $input, $date)) {
             }
             $aircraft = $matches[3][$x];
             $etd = $matches[4][$x];
-            $pilot1 = $matches[5][$x];
-            $pilot2 = $matches[6][$x];
+            $pilot1 = addslashes($matches[5][$x]);
+            $pilot2 = addslashes($matches[6][$x]);
             $query = "INSERT INTO tbl_tms2flightlist(tms2flightlist_status, tms2flightlist_sortie, tms2flightlist_aircraft, tms2flightlist_etd, tms2flightlist_pilot1, tms2flightlist_pilot2, tms2flightlist_date) 
             VALUES ('$status','$sortie','$aircraft','$etd','$pilot1','$pilot2','$date')";
             if(mysqli_query($link, $query)) {
