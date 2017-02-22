@@ -4,6 +4,7 @@ session_start([
     'read_and_close'  => false,
 ]);
 if(!isset($_SESSION['cadet'])) header('location: /index.php?status=failed&msg=You need to log in.');
+$cadet_id = $_SESSION['cadet'];
 include('../php/db_conn.php');
 ?>
 
@@ -23,7 +24,71 @@ include('../php/db_conn.php');
         <h2>Submit a Flight Planning Request</h2>
 
         <div class="row">
-          <div class="col-lg-offset-2 col-lg-8 col-md-10">
+
+          <div class="col-md-2">
+
+            <div class="panel panel-danger">
+              <!-- Default panel contents -->
+              <div class="panel-heading">Repeat Sorties</div>
+              <!-- List group -->
+              <ul class="list-group">
+              <?php
+              $query = "SELECT cadet_opsname, cadet_name, sortie_code, repeatedsortie_id, DATE(repeatedsortie_date) AS repeatedsortie_date FROM tbl_repeatedsorties JOIN tbl_cadets ON repeatedsortie_cadet=cadet_id JOIN tbl_sorties ON repeatedsortie_sortie=sortie_id WHERE repeatedsortie_done='0' AND cadet_id='$cadet_id'";
+              $result = mysqli_query($link, $query);
+              while($row = mysqli_fetch_array($result)) {
+                ?>
+                <li class="list-group-item clickable"><a onclick="getSorties('<?php echo $row['cadet_name']; ?>')"><?php echo $row['cadet_opsname']; ?></a>
+                <small class="pull-left"><a class="text-muted" onclick="markRepeatCompleted('<?php echo $row['repeatedsortie_id']; ?>')"><i class="fa fa-times"></i></a></small><br/ >
+                <span class="text-muted">
+                <small><?php echo $row['sortie_code']; ?></small><br />
+                <small><?php echo date('j M',strtotime($row['repeatedsortie_date'])); ?></small><br />
+                </span>
+                </li>
+                <?php
+              }
+              ?>
+              </ul>
+            </div>
+
+            <div class="panel panel-info">
+              <!-- Default panel contents -->
+              <div class="panel-heading">No-Plan List</div>
+              <!-- List group -->
+              <ul class="list-group">
+              <?php
+              $query = "SELECT cadet_opsname, request_noplanstart, request_noplanend, request_remarks FROM tbl_requests JOIN tbl_cadets ON request_cadet=cadet_id WHERE request_type='no-plan' AND DATE(NOW())<=request_noplanend AND cadet_id='$cadet_id' ORDER BY request_noplanstart ASC";
+              $result = mysqli_query($link, $query);
+              while($row = mysqli_fetch_array($result)) {
+                ?>
+                <li class="list-group-item"><?php echo $row['cadet_opsname']; ?><br/ ><small class="text-muted"><?php echo date('j M',strtotime($row['request_noplanstart'])); ?> - <?php echo date('j M',strtotime($row['request_noplanend'])); ?></small><br /><small><?php echo $row['request_remarks']; ?></small></li>
+                <?php
+              }
+              ?>
+              </ul>
+            </div>
+
+            <div class="panel panel-warning">
+              <!-- Default panel contents -->
+              <div class="panel-heading">Other Requests</div>
+              <!-- List group -->
+              <ul class="list-group">
+              <?php
+              $query = "SELECT cadet_opsname, request_remarks, request_id, request_timestamp FROM tbl_requests JOIN tbl_cadets ON request_cadet=cadet_id WHERE request_type='message' AND request_done='0' AND cadet_id='$cadet_id'";
+              $result = mysqli_query($link, $query);
+              while($row = mysqli_fetch_array($result)) {
+                ?>
+                <li class="list-group-item clickable" onclick="markRequestCompleted('<?php echo $row['request_id']; ?>')"><small><?php echo $row['request_remarks']; ?></small>
+                <p class="text-right text-muted"><small>- <?php echo $row['cadet_opsname']." (".date('j M',strtotime($row['request_timestamp'])).")"; ?></small></p>
+                </li>
+                <?php
+              }
+              ?>
+              </ul>
+            </div>
+
+          </div> <!--end of col-2 panel -->
+
+          <div class="col-md-10">
             <div class="panel panel-default">
                 <div class="panel-heading">Repeat Sortie</div>
 
@@ -58,11 +123,7 @@ include('../php/db_conn.php');
                   </div>
                 </div>
             </div>
-          </div>
-        </div>
 
-        <div class="row">
-          <div class="col-lg-offset-2 col-lg-8 col-md-12">
             <div class="panel panel-default">
                 <div class="panel-heading">Request No-Plan Dates</div>
 
@@ -89,7 +150,7 @@ include('../php/db_conn.php');
                           </div>
                         </div>
                         <p class="text-muted"><small>If you are not using the Google Chrome datepicker, please type the dates in the YYYY-MM-DD format.</small></p>
-                        <p class="text-red"><small><b>Planners cannot guarantee the approval of your requests but they will try as much as they can to grant them where the requests made are fair and reasonable.</b></small></p>
+                        <p class="text-red"><small><b>Planners cannot guarantee the approval of your requests but they will try as much as they can to grant them where the requests made are fair and reasonable. If you have made a no-plan request in error, please contact a planner.</b></small></p>
                         <div class="text-right">
                           <button type="submit" class="btn btn-success">Request No-Plan</button>
                         </div>
@@ -98,11 +159,7 @@ include('../php/db_conn.php');
                   </div>
                 </div>
             </div>
-          </div>
-        </div>
-        
-        <div class="row">
-          <div class="col-lg-offset-2 col-lg-8 col-md-12">
+
             <div class="panel panel-default">
                 <div class="panel-heading">Submit Other Request</div>
 
@@ -125,8 +182,6 @@ include('../php/db_conn.php');
                   </div>
                 </div>
             </div>
-          </div>
-        </div>
         
       </div>
 

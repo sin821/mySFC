@@ -62,6 +62,17 @@ include('php/db_conn.php');
                 }
                 ?>
                 </ul>
+                <?php
+                $query = "SELECT ROUND(SUM(doner_amount),2) AS total_collected FROM tbl_doners WHERE 1";
+                $result = mysqli_query($link, $query);
+                while($row = mysqli_fetch_array($result)) {
+                  $total_collected = $row['total_collected'];
+                }
+                $days_funded = ceil($total_collected / 1.68);
+                $date_started = '2016-10-1';
+                $date_end = date('j F Y', strtotime($date_started.' + '.$days_funded.' days'));
+                ?>
+                <small>These donations will fund the app until: <b><?php echo $date_end; ?></b></small>
               </p>
             </div>
 

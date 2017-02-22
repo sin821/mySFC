@@ -38,16 +38,17 @@
                 <li><a href="/planning/update_TMS2_flightlist.php">Update TMS2 Latency</a></li>
                 <li><a href="/planning/generate_TMS2_plan.php">Input Current TMS2 Plan</a></li>
                 <!--<li><a href="/planning/latency_report.php">Latency Report</a></li>-->
+                <li role="separator" class="divider"></li>
                 <li><a href="/planning/cadet_list.php">Manage Cadets</a></li>
+                <li><a href="/planning/instructor_list.php">Manage Instructors</a></li>
                 <?php
-                }
-              ?>
-              <?php
-              if($_SESSION['role']==2||$_SESSION['role']==1) { //for lead cadets and planners only
+              }
+              if(($_SESSION['role']==2)||($_SESSION['role']==1)) { //for lead cadets and planners only
                 ?>
+                <li role="separator" class="divider"></li>
                 <li><a href="/planning/leadcadet_dashboard.php">Lead Cadet Dashboard</a></li>
                 <?php
-                }
+              }
               ?>
             </ul>
           </li>

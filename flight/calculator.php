@@ -91,7 +91,7 @@ include('../php/db_conn.php');
                                 $total_weight = $cadet_weight + $instructor_weight;
                               }
                               ?>
-                                <td>Pilot & Front Passenger<br /><small>Instructor: <?php echo $instructor_weight; ?>kg</small></td>
+                                <td>Pilot & Front Passenger<br /><small><a onclick="viewInstructorWeights()">Instructor Weights</a></small></td>
                                 <td>
                                   <input id="frontPaxInput" type="number" class="form-control input-md text-center" value="<?php echo $total_weight; ?>" min="0" max="400" onkeyup="calculateBalance()" onchange="calculateBalance()" />
                                 </td>
@@ -197,7 +197,7 @@ include('../php/db_conn.php');
                             <div class="col-xs-4"><p><u><span id="landing50m"></span></u> (m)</p></div>
                         </div>
                     </div>
-                    <p><small class="text-muted">Will interpolate for temperature and pressure altitude. For YH-series aircraft, add approximately 23ft to the calculations.</small></p>
+                    <p><small class="text-muted">Will interpolate for temperature and pressure altitude (assumes sea level for PA less than 0 feet). For YH-series aircraft, add approximately 23ft to the calculations.</small></p>
                 </div>
             </div>
             <div class="panel panel-default">
@@ -224,6 +224,13 @@ include('../php/db_conn.php');
       </div>
 
     </div><!-- /.container -->
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content" id="ajax"></div>
+      </div>
+    </div>
 
 
     <?php include('../modules/scripts.php'); ?>
@@ -345,7 +352,12 @@ include('../php/db_conn.php');
       var pressureAlt = 100 + ((1013 - +qnh)*30);
       document.getElementById('pressureAlt').innerHTML = pressureAlt;
 
-      var pressureAltCorrectionFactor = pressureAlt/100;
+      if(pressureAlt<=0) {
+        var pressureAltCorrectionFactor = 0;
+      }
+      else {
+        var pressureAltCorrectionFactor = pressureAlt/100;
+      }
 
       //calculate tailwind margin
       var tailWindMargin = 1 + Math.ceil(tailwind/2) * 0.1;
@@ -429,6 +441,16 @@ include('../php/db_conn.php');
 
       errorSpan.innerHTML = error;
 
+    }
+
+    function viewInstructorWeights() {
+      $('#ajax').load( encodeURI("../ajax/modal_instructorWeights.php") ,function(responseTxt,statusTxt,xhr){
+        if(statusTxt=="success") {
+          $('#myModal').modal();
+        }
+        if(statusTxt=="error")
+          console.log("Error: "+xhr.status+": "+xhr.statusText);
+      });
     }
     </script>
 

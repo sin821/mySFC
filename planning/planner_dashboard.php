@@ -286,7 +286,7 @@ include('../php/db_conn.php');
         $('#ajax').load( encodeURI("../php/markRequestAsComplete.php?id="+id) ,function(responseTxt,statusTxt,xhr){
           if(statusTxt=="success") {
             //refresh request box
-            window.location.reload();
+            window.location = 'planner_dashboard.php?status=success&msg=Successfully deleted planning request.';
           }
           if(statusTxt=="error")
             console.log("Error: "+xhr.status+": "+xhr.statusText);
@@ -298,7 +298,7 @@ include('../php/db_conn.php');
         $('#ajax').load( encodeURI("../php/markRepeatAsComplete.php?id="+id) ,function(responseTxt,statusTxt,xhr){
           if(statusTxt=="success") {
             //refresh request box
-            window.location.reload();
+            window.location = 'planner_dashboard.php?status=success&msg=Successfully deleted repeat sortie.';
           }
           if(statusTxt=="error")
             console.log("Error: "+xhr.status+": "+xhr.statusText);
