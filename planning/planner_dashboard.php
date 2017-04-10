@@ -60,7 +60,7 @@ include('../php/db_conn.php');
               $result = mysqli_query($link, $query);
               while($row = mysqli_fetch_array($result)) {
                 ?>
-                <li class="list-group-item clickable"><a onclick="getSorties('<?php echo $row['cadet_name']; ?>')"><?php echo $row['cadet_opsname']; ?></a>
+                <li class="list-group-item clickable"><a onclick="getSorties('<?php echo $row['cadet_opsname']; ?>')"><?php echo $row['cadet_opsname']; ?></a>
                 <small class="pull-left"><a class="text-muted" onclick="markRepeatCompleted('<?php echo $row['repeatedsortie_id']; ?>')"><i class="fa fa-times"></i></a></small><br/ >
                 <span class="text-muted">
                 <small><?php echo $row['sortie_code']; ?></small><br />
@@ -161,6 +161,7 @@ include('../php/db_conn.php');
                 while($row2 = mysqli_fetch_array($result2)) {
 
                   $cadet_name = $row2['cadet_name'];
+                  $cadet_opsname = $row2['cadet_opsname'];
 
                   //check if cadet is flying today
                   $consecutive_duty = 0;
@@ -206,10 +207,10 @@ include('../php/db_conn.php');
                     $class = "list-group-item list-group-item-success";
                   }
                   ?>
-                  <a onclick="getSorties('<?php echo $cadet_name; ?>')">
+                  <a onclick="getSorties('<?php echo $cadet_opsname; ?>')">
                     <li class="<?php echo $class; ?>">
                     	<span class="<?php echo $duty_class; ?>"><?php echo $consecutive_duty; ?></span>
-                    <?php echo $row2['cadet_opsname']; ?>
+                    <?php echo $cadet_opsname; ?>
                       <span class="pull-right">
                       <?php
                       if($isPlanned==0) {

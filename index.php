@@ -53,7 +53,7 @@ include('php/db_conn.php');
                 <small>This app was made possible and free to use thanks to donations from the following people:</small>
                 <ul class="text-left text-small">
                 <?php
-                $query = "SELECT * FROM tbl_doners WHERE 1 ORDER BY doner_amount DESC";
+                $query = "SELECT * FROM tbl_doners WHERE doner_approved='1' ORDER BY doner_amount DESC";
                 $result = mysqli_query($link, $query);
                 while($row = mysqli_fetch_array($result)) {
                   ?>
@@ -63,7 +63,7 @@ include('php/db_conn.php');
                 ?>
                 </ul>
                 <?php
-                $query = "SELECT ROUND(SUM(doner_amount),2) AS total_collected FROM tbl_doners WHERE 1";
+                $query = "SELECT ROUND(SUM(doner_amount),2) AS total_collected FROM tbl_doners WHERE doner_approved='1'";
                 $result = mysqli_query($link, $query);
                 while($row = mysqli_fetch_array($result)) {
                   $total_collected = $row['total_collected'];

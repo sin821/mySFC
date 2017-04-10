@@ -20,8 +20,8 @@ $message = $cadet.' has the following planning request: '.$message;
 // In case any of our lines are larger than 70 characters, we should use wordwrap()
 $message = wordwrap($message, 70, "\r\n");
 
-// Send to all planners
-$query = "SELECT login_email FROM tbl_login WHERE login_role = '1'";
+// Send to all planners where cadet information exists
+$query = "SELECT login_email FROM tbl_login RIGHT JOIN tbl_cadets ON login_cadet=cadet_id WHERE login_role = '1'";
 $result = mysqli_query($link, $query);
 while($row = mysqli_fetch_array($result)) {
 	$email_address = $row['login_email'];

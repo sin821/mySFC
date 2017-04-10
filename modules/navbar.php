@@ -55,8 +55,17 @@
           <?php
         }
         ?>
-        <li><a href="/e-learning/player.php">Mass Briefs</a></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+            E-Learning <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu">
+            <li><a href="/e-learning/player.php">Mass Briefs</a></li>
+            <li><a href="/e-learning/rpl_documents.php">RPL Documents</a></li>
+          </ul>
+        </li>
         <li><a href="/others/contact.php">Contact</a></li>
+        <li><a href="/others/donation.php">Donate</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li class="dropdown">

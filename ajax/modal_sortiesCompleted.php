@@ -6,15 +6,16 @@ include('../php/db_conn.php');
 </div>
 <div class="modal-body">
     <?php
-    $cadet = $_GET['cadet'];
+    $cadet_opsname = $_GET['cadet'];
 
-    $query = "SELECT cadet_crosswind, cadet_signedCCT, cadet_signedGH, cadet_signedNav FROM tbl_cadets WHERE cadet_name='$cadet'";
+    $query = "SELECT cadet_name, cadet_crosswind, cadet_signedCCT, cadet_signedGH, cadet_signedNav FROM tbl_cadets WHERE cadet_opsname='$cadet_opsname'";
     $result = mysqli_query($link, $query);
     while($row = mysqli_fetch_array($result)) {
         $signedCCT = $row['cadet_signedCCT'];
         $signedGH = $row['cadet_signedGH'];
         $signedNav = $row['cadet_signedNav'];
         $crosswind = $row['cadet_crosswind'];
+        $cadet = addslashes($row['cadet_name']);
     }
     ?>
     <div class="row">

@@ -60,6 +60,7 @@ include('../php/db_conn.php');
                         }
                         ?>
                         </select>
+                        <small class="text-muted">Looking for YH aircraft? <a href="calculator_leased.php">Click Here.</a></small>
                       </div>
                       <div class="col-xs-6 load-form-group">
                         <label>Fuel:</label>
@@ -197,7 +198,7 @@ include('../php/db_conn.php');
                             <div class="col-xs-4"><p><u><span id="landing50m"></span></u> (m)</p></div>
                         </div>
                     </div>
-                    <p><small class="text-muted">Will interpolate for temperature and pressure altitude (assumes sea level for PA less than 0 feet). For YH-series aircraft, add approximately 23ft to the calculations.</small></p>
+                    <p><small class="text-muted">Will interpolate for temperature and pressure altitude (assumes sea level for PA less than 0 feet).</small></p>
                 </div>
             </div>
             <div class="panel panel-default">
@@ -341,7 +342,7 @@ include('../php/db_conn.php');
       else if(temp>=20&&temp<30) {
        tempCategory = 3;
       }
-      else if(temp>=30&&temp<40) {
+      else if(temp>=30&&temp<=40) {
        tempCategory = 4;
       }
       else {

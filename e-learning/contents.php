@@ -20,30 +20,30 @@ include('../php/db_conn.php');
     <?php include('../modules/alerts.php'); ?>
 
       <div class="starter-template">
-        <h1>Mass Briefs</h1>
+        <h1>RPL Documents</h1>
 
         <div class="row">
+        <?php
+        $dir    = '../documents/RPL_Info';
+        $file = scandir($dir);
+        ?>
           <div class="col-lg-offset-1 col-lg-10 col-md-12">
             <table id="table" class="table table-hover table=condensed text-left">
               <thead>
                 <tr>
-                  <th>ID</th>
-                  <th>Mass Brief No.</th>
-                  <th>Name</th>
+                  <th>File Name</th>
                 </tr>
               </thead>
               <tbody>
                 <?php
-                $query = "SELECT * FROM tbl_briefs WHERE 1";
-                $result = mysqli_query($link, $query);
-                while($row = mysqli_fetch_array($result)) {
+                foreach($file as $key => $value) {
+                  if ( !in_array( $value, array( '.', '..', '.DS_Store' ) ) ) {
                   ?>
                   <tr>
-                    <td><?php echo $row['brief_id']; ?></td>
-                    <td><?php echo $row['brief_massbrief']; ?></td>
-                    <td><a href="player.php?brief=<?php echo $row['brief_code']; ?>"><?php echo $row['brief_code']; ?> - <?php echo $row['brief_name']; ?></a></td>
+                    <td><a href="/documents/RPL_Info/<?php echo $value; ?>"><?php echo $value; ?></a></td>
                   </tr>
                   <?php
+                  }
                 }
                 ?>
               </tbody>

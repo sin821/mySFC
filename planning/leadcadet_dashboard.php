@@ -40,8 +40,9 @@ while($row = mysqli_fetch_array($result)) {
               $query = "SELECT cadet_opsname, cadet_name, sortie_code, repeatedsortie_id, DATE(repeatedsortie_date) AS repeatedsortie_date FROM tbl_repeatedsorties JOIN tbl_cadets ON repeatedsortie_cadet=cadet_id JOIN tbl_sorties ON repeatedsortie_sortie=sortie_id WHERE repeatedsortie_done='0' AND cadet_instructor='$leadcadet_instructor'";
               $result = mysqli_query($link, $query);
               while($row = mysqli_fetch_array($result)) {
+                $cadet_opsname = $row['cadet_opsname'];
                 ?>
-                <li class="list-group-item clickable"><a onclick="getSorties('<?php echo $row['cadet_name']; ?>')"><?php echo $row['cadet_opsname']; ?></a>
+                <li class="list-group-item clickable"><a onclick="getSorties('<?php echo $cadet_opsname; ?>')"><?php echo $cadet_opsname; ?></a>
                 <small class="pull-left"><a class="text-muted" onclick="markRepeatCompleted('<?php echo $row['repeatedsortie_id']; ?>')"><i class="fa fa-times"></i></a></small><br/ >
                 <span class="text-muted">
                 <small><?php echo $row['sortie_code']; ?></small><br />
@@ -187,7 +188,7 @@ while($row = mysqli_fetch_array($result)) {
                     $class = "list-group-item list-group-item-success";
                   }
                   ?>
-                  <a onclick="getSorties('<?php echo $cadet_name; ?>')">
+                  <a onclick="getSorties('<?php echo $row2['cadet_opsname']; ?>')">
                     <li class="<?php echo $class; ?>">
                     	<span class="<?php echo $duty_class; ?>"><?php echo $consecutive_duty; ?></span>
                     <?php echo $row2['cadet_opsname']; ?>

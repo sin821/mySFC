@@ -26,8 +26,14 @@ include('../php/db_conn.php');
           <div class="col-lg-offset-1 col-lg-10 col-md-12">
             <?php
             $cadet_id = $_SESSION['cadet'];
-            $user = $_SESSION['name'];
+            $user = addslashes($_SESSION['name']);
             $syllabus_code = $_SESSION['syllabus'];
+
+            $query = "SELECT cadet_opsname FROM tbl_cadets WHERE cadet_id='$cadet_id'";
+            $result = mysqli_query($link, $query);
+            while($row = mysqli_fetch_array($result)) {
+              $cadet_opsname = $row['cadet_opsname'];
+            }
 
             $query = "SELECT FLOOR(DATEDIFF(DATE(NOW()), DATE(cadet_startofcourse))/7) AS weeksSinceStart, cadet_startofcourse FROM tbl_cadets WHERE cadet_id='$cadet_id'";
             $result = mysqli_query($link, $query);
@@ -78,13 +84,13 @@ include('../php/db_conn.php');
               </thead>
               <tbody>
               <?php
-              $query = "SELECT * FROM vw_latency WHERE dual_cadet LIKE '$user'";
+              $query = "SELECT * FROM vw_latency WHERE dual_cadet LIKE '%$user%'";
               $result = mysqli_query($link, $query);
               while($row = mysqli_fetch_array($result)) {
-                $cadet = $row['dual_cadet'];
+                $cadet = addslashes($row['dual_cadet']);
                 ?>
                 <tr>
-                  <td><a onclick="getSorties('<?php echo $row['dual_cadet']; ?>')"><?php echo $row['dual_cadet']; ?></a></td>
+                  <td><a onclick="getSorties('<?php echo $cadet_opsname; ?>')"><?php echo $row['dual_cadet']; ?></a></td>
                   <td><?php echo $row['cadet_course']; ?></td>
                   <td><?php echo $row['instructor_initials']; ?></td>
                   <td><?php echo $row['total_latency']; ?></td>
