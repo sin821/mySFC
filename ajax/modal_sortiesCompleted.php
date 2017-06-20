@@ -55,7 +55,7 @@ include('../php/db_conn.php');
         		if($syllabus_code=='MPL-M2') {
         			preg_match("/\d{3}[AS]/sm", $row['sortie_code'], $output_array);
         		}
-        		elseif($syllabus_code=='CPL-A-A'||$syllabus_code=='CPL-G-B') {
+        		else {
         			preg_match("/(IPT)?S?\d{3}/sm", $row['sortie_code'], $output_array);
         		}
         		$code = $output_array[0];

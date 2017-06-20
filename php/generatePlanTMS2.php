@@ -39,7 +39,7 @@ if ($valid_date) {
         mysqli_query($link, $query);
 
         //do regex check for required information
-        preg_match_all("#^\d+\t (PostFlight|Authorized|Current|Cancelled)\t([ABJ]\d{3}S? ?.?[1A-Z]?|[ABJ]IPTS?\d{3} ?[A-Z]?|M2-\d{3}[AFS].?1?-?S? ?[A-Z]?|M\d{3}[AFS].?1?-?S? ?[A-Z]?)\t (VH-\w{3}|F141-G|F242-G)\t (\d{2}:\d{2})\t (\w+ ?-?'?/?\w* ?-?'?/?\w* ?-?'?/?\w* ?-?'?/?\w* ?-?'?/?\w* ?-?'?/?\w*)\t (\w+ ?-?'?/?\w* ?-?'?/?\w* ?-?'?/?\w* ?-?'?/?\w* ?-?'?/?\w* ?-?'?/?\w*)?#sm", $input, $matches);
+        preg_match_all("#^\d+\t (PostFlight|Authorized|Current|Cancelled)\t([ABJ]\d{3}S? ?.?[1A-Z]?|[ABJ]IPTS?\d{3} ?[A-Z]?|M2-\d{3}[AFS].?1?-?S? ?[A-Z]?|M\d{3}[AFS].?1?-?S? ?[A-Z]?)\t (VH-\w{3}|F141-G|F242-G)\t (\d{2}:\d{2})\t (\w+ ?-?'?/?\w* ?-?'?/?\w* ?-?'?/?\w* ?-?'?/?\w* ?-?'?/?\w* ?-?'?/?\w* *)\t (\w+ ?-?'?/?\w* ?-?'?/?\w* ?-?'?/?\w* ?-?'?/?\w* ?-?'?/?\w* ?-?'?/?\w* *)?#sm", $input, $matches);
 
         $arrlength = count($matches[1]);
 
@@ -66,7 +66,13 @@ if ($valid_date) {
             }
             $aircraft = $matches[3][$x];
             $etd = $matches[4][$x];
+            if($matches[5][$x]=='Cheong Chu Siang Jesper                     ') { //temp fix for errorneous name in TMS2
+                $matches[5][$x] = 'Cheong Chu Siang Jesper';
+            }
             $pilot1 = addslashes($matches[5][$x]);
+            if($matches[6][$x]=='Cheong Chu Siang Jesper                     ') { //temp fix for errorneous name in TMS2
+                $matches[6][$x] = 'Cheong Chu Siang Jesper';
+            }
             $pilot2 = addslashes($matches[6][$x]);
             $query = "INSERT INTO tbl_tms2currentplan(flightlist_status, flightlist_sortie, flightlist_aircraft, flightlist_etd, flightlist_pilot1, flightlist_pilot2, flightlist_date) 
             VALUES ('$status','$sortie','$aircraft','$etd','$pilot1','$pilot2','$date')";
